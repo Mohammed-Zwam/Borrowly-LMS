@@ -1,4 +1,4 @@
-package com.lms.reserveit;
+package com.lms.readify;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
