@@ -24,21 +24,19 @@ public class CategoryService {
         return categoryMapper.toCategoryTreeDTO(categoryRepository.save(category));
     }
 
-    public CategoryTreeResponseDTO update(String id, CategoryRequestDTO dto) throws EntityNotFoundException {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Entity not found with id: " + id));
-        category = categoryMapper.toEntity(category, dto);
-        return categoryMapper.toCategoryTreeDTO(categoryRepository.save(category));
+    public CategoryTreeResponseDTO update(String id, CategoryRequestDTO dto) {
+        Category existingCategory = this.findEntityById(id);
+        categoryMapper.toEntity(existingCategory, dto);
+        return categoryMapper.toCategoryTreeDTO(categoryRepository.save(existingCategory));
     }
 
     public void delete(String id) {
+        this.findEntityById(id); // check if not exist
         categoryRepository.deleteById(id);
     }
 
-    public CategoryTreeResponseDTO findById(String id) throws EntityNotFoundException {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Entity not found with id: " + id));
-
+    public CategoryTreeResponseDTO findById(String id) {
+        Category category = this.findEntityById(id);
         return categoryMapper.toCategoryTreeDTO(category);
     }
 
@@ -46,9 +44,50 @@ public class CategoryService {
         return categoryMapper.toCategoryDTOs(categoryRepository.findAll());
     }
 
-    public List<CategoryTreeResponseDTO> findRootCategoriesWithSubCategories() {
-        return categoryMapper.toCategoryTreeDTOs(
-                categoryRepository.findByParentCategoryIsNullAndIsActiveTrueOrderByDisplayOrderAsc()
+
+    public List<CategoryResponseDTO> findAllRoots() {
+        return categoryMapper.toCategoryDTOs(findRootEntities());
+    }
+
+    public List<CategoryTreeResponseDTO> getTree() {
+        return categoryMapper.toCategoryTreeDTOs(findRootEntities());
+    }
+
+
+    public List<CategoryResponseDTO> findSubCategories(String parentId) {
+        return categoryMapper.toCategoryDTOs(
+                categoryRepository.findByParentCategoryIdAndIsActiveTrueOrderByDisplayOrderAsc(parentId)
         );
+    }
+
+    public List<CategoryResponseDTO> findAllActiveCategories() {
+        return categoryMapper.toCategoryDTOs(
+                categoryRepository.findByIsActiveTrueOrderByDisplayOrderAsc()
+        );
+    }
+
+    public CategoryTreeResponseDTO updateCategoryStatus(String id, boolean isActive) {
+        Category category = this.findEntityById(id);
+        category.setIsActive(isActive);
+        return categoryMapper.toCategoryTreeDTO(categoryRepository.save(category));
+    }
+
+    public Long countActiveCategories() {
+        return categoryRepository.countByIsActiveTrue();
+    }
+
+
+    //=========== HELPERS ===========//
+
+    private Category findEntityById(String id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Category not found with id: " + id
+                ));
+    }
+
+    private List<Category> findRootEntities() {
+        return categoryRepository
+                .findByParentCategoryIsNullAndIsActiveTrueOrderByDisplayOrderAsc();
     }
 }
