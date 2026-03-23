@@ -1,13 +1,13 @@
-package com.lms.reserveit;
+package com.lms.readify;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ReserveItApplication {
+public class ReadifyApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ReserveItApplication.class, args);
+        SpringApplication.run(ReadifyApplication.class, args);
     }
 
 }
