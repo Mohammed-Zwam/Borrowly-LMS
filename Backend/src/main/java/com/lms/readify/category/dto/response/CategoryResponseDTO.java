@@ -12,17 +12,12 @@ public class CategoryResponseDTO {
 
     private String id;
 
-    @NotBlank(message = "Category name is required")
     private String name;
 
-    @NotBlank(message = "Category code is required")
     private String code;
 
-    @NotBlank(message = "Category description is required")
-    @Size(max = 500, message = "Category description must not exceed 500 characters")
     private String description;
 
-    @Min(value = 0, message = "Display Order cannot be less than zero")
     private Integer displayOrder;
 
     private Boolean isActive;

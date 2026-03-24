@@ -1,6 +1,7 @@
 package com.lms.readify.category.entity;
 
 
+import com.lms.readify.book.entity.Book;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,17 +26,12 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    @NotBlank(message = "Category name is required")
     private String name;
 
-    @NotBlank(message = "Category code is required")
     private String code;
 
-    @NotBlank(message = "Category description is required")
-    @Size(max = 500, message = "Category description must not exceed 500 characters")
     private String description;
 
-    @Min(value = 0, message = "Display Order cannot be less than zero")
     private Integer displayOrder;
 
     @NotNull
@@ -47,11 +44,9 @@ public class Category {
     @UpdateTimestamp
     private LocalDateTime updatedDate;
 
-    /*
-        @OneToMany(cascade = CascadeType.PERSIST)
-        private List<Book> books;
-    */
 
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "category")
+    private List<Book> books;
 
 
     /*================================[Composite Pattern]================================*/

@@ -4,10 +4,11 @@ import com.lms.readify.category.dto.request.CategoryRequestDTO;
 import com.lms.readify.category.dto.response.CategoryResponseDTO;
 import com.lms.readify.category.dto.response.CategoryTreeResponseDTO;
 import com.lms.readify.category.entity.Category;
-import com.lms.readify.category.repository.CategoryRepository;
+import com.lms.readify.category.service.CategoryService;
 import com.lms.readify.shared.exception.EntityNotFoundException;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.List;
 
@@ -19,7 +20,8 @@ import java.util.List;
 public abstract class CategoryMapper {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    @Lazy
+    private CategoryService categoryService;
 
 
     @Mappings({
@@ -56,15 +58,12 @@ public abstract class CategoryMapper {
     public abstract Category toEntity(@MappingTarget Category category, CategoryRequestDTO dto);
 
 
-
     @AfterMapping
-    void getParentCategory(CategoryRequestDTO dto, @MappingTarget Category entity) throws EntityNotFoundException {
+    void getParentCategory(CategoryRequestDTO dto, @MappingTarget Category entity) {
         if (dto.getParentCategoryId() == null) {
             entity.setParentCategory(null);
         } else {
-
-            Category parent = categoryRepository.findById(dto.getParentCategoryId())
-                    .orElseThrow(() -> new EntityNotFoundException("Parent category not found"));
+            Category parent = categoryService.findEntityById(dto.getParentCategoryId(), "Parent category");
             entity.setParentCategory(parent);
         }
     }
