@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/subscription-plan")
+@RequestMapping("/api/subscription-plans")
 @RequiredArgsConstructor
 public class SubscriptionPlanController {
 
@@ -43,7 +43,7 @@ public class SubscriptionPlanController {
                 .body(
                         ApiResponse.<List<SubscriptionPlanResponse>>builder()
                                 .success(true)
-                                .message("Subscription Plan Retrieved Successfully")
+                                .message("Subscription Plans Retrieved Successfully")
                                 .data(subscriptionPlanService.getAll())
                                 .build()
                 );
