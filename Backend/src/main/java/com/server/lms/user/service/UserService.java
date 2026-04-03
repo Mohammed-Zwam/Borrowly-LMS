@@ -11,7 +11,9 @@ public interface UserService {
 
     User create(UserRequest dto);
 
-    UserResponse getCurrentUser();
+    User getCurrentUser();
+
+    UserResponse getUserProfile();
 
     List<UserResponse> getAllUsers();
 
