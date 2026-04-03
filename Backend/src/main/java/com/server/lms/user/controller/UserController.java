@@ -39,7 +39,7 @@ public class UserController {
                         ApiResponse.<UserResponse>builder()
                                 .success(true)
                                 .message("Users retrieved successfully")
-                                .data(userService.getCurrentUser())
+                                .data(userService.getUserProfile())
                                 .build()
                 );
     }
