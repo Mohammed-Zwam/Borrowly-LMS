@@ -3,6 +3,10 @@ package com.server.lms.subscription.service;
 import com.server.lms._shared.dto.PageResponse;
 import com.server.lms._shared.exception.EntityNotFoundException;
 import com.server.lms._shared.exception.UnauthorizedException;
+import com.server.lms.payment.dto.request.PaymentInitiateRequest;
+import com.server.lms.payment.dto.response.PaymentInitiateResponse;
+import com.server.lms.payment.enums.PaymentType;
+import com.server.lms.payment.service.PaymentService;
 import com.server.lms.subscription.dto.request.SubscriptionRequest;
 import com.server.lms.subscription.dto.response.SubscriptionResponse;
 import com.server.lms.subscription.entity.Subscription;
@@ -31,6 +35,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final SubscriptionMapper subscriptionMapper;
     private final UserService userService;
+    private final PaymentService paymentService;
 
     @Override
     public SubscriptionResponse getById(String id) {
@@ -63,25 +68,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                                 .map(subscriptionMapper::toDTO)
                                 .collect(Collectors.toList())
                 )
-                .pageNumber(subscriptions.getNumber())
-                .pageSize(subscriptions.getSize())
-                .totalElements(subscriptions.getTotalElements())
-                .totalPages(subscriptions.getTotalPages())
-                .isLastPage(subscriptions.isLast())
-                .isFirstPage(subscriptions.isFirst())
-                .isEmpty(subscriptions.isEmpty())
-                .build();
+                .build()
+                .setPageInfo(subscriptions);
     }
 
     @Override
-    public SubscriptionResponse subscribe(SubscriptionRequest dto) {
+    public PaymentInitiateResponse subscribe(SubscriptionRequest dto) {
         var user = userService.getCurrentUser();
 
         Subscription subscription = subscriptionMapper.toEntity(dto);
 
         subscription.initFromPlan();
         subscription.setUser(user);
-        subscription.setIsActive(false);
+        subscription.setIsActive(false); // UNTIL PAYMENT PROCESS COMPLETED
 
         // TODO: PAYMENT VALIDATION
 
@@ -89,7 +88,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         log.info("User " + user.getEmail() + " subscribed to plan " + subscription.getSubscriptionPlan().getPlanCode());
 
-        return subscriptionMapper.toDTO(subscription);
+        var paymentInitiateRequest = PaymentInitiateRequest.builder()
+                .amount(subscription.getPrice())
+                .description("Subscription for " + subscription.getSubscriptionPlan().getName())
+                .userId(user.getId())
+                .paymentType(PaymentType.MEMBERSHIP)
+                .paymentProvider(dto.getPaymentProvider())
+                .subscriptionId(subscription.getId())
+                .build();
+
+        return paymentService.initiatePayment(paymentInitiateRequest);
     }
 
 
@@ -137,7 +145,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         );
     }
 
-    // TODO: BACKGROUND JOB TO CANCEL EXPIRED SUBSCRIPTIONS
+    // TODO: BACKGROUND JOB TO CANCEL EXPIRED SUBSCRIPTIONS (ex: INVOKE EVERY DAY)
     @Override
     public void deactivateExpiredSubscriptions() {
         List<Subscription> expiredSubscriptions = subscriptionRepository.findExpiredActiveSubscriptions();
@@ -150,6 +158,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 
     // ====== HELPERS ======= //
+    @Override
     public Subscription findEntityById(String id) {
         return subscriptionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(

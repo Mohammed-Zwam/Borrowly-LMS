@@ -1,5 +1,6 @@
 package com.server.lms.subscription.dto.request;
 
+import com.server.lms.payment.enums.PaymentProvider;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -12,6 +13,8 @@ public class SubscriptionRequest {
     private String subscriptionPlanId;
 
     private Boolean autoRenew;
+
+    private PaymentProvider paymentProvider;
 
     private String notes;
 }

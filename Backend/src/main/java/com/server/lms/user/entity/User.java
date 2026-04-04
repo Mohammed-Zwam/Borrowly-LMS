@@ -1,5 +1,7 @@
 package com.server.lms.user.entity;
 
+import com.server.lms.user.enums.AuthProvider;
+import com.server.lms.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;

@@ -1,7 +1,7 @@
 package com.server.lms.book.service;
 
 import com.server.lms.book.dto.request.BookRequest;
-import com.server.lms.book.dto.request.BookSearchRequest;
+import com.server.lms.book.dto.request.BookSearchRequestDTO;
 import com.server.lms.book.dto.response.BookResponse;
 import com.server.lms.book.dto.response.BookStatisticsResponse;
 import com.server.lms._shared.dto.PageResponse;
@@ -25,7 +25,7 @@ public interface BookService {
     BookResponse changeBookStatus(String id, boolean isActive);
 
     // Search with filters and pagination
-    PageResponse<BookResponse> searchBooksByFilters(BookSearchRequest searchRequest);
+    PageResponse<BookResponse> searchBooksByFilters(BookSearchRequestDTO searchRequest);
 
     BookStatisticsResponse getBookStatistics();
 

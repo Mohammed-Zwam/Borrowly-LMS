@@ -2,6 +2,8 @@ package com.server.lms.subscription.controller;
 
 import com.server.lms._shared.dto.ApiResponse;
 import com.server.lms._shared.dto.PageResponse;
+import com.server.lms.payment.dto.request.PaymentInitiateRequest;
+import com.server.lms.payment.dto.response.PaymentInitiateResponse;
 import com.server.lms.subscription.dto.request.SubscriptionRequest;
 import com.server.lms.subscription.dto.response.SubscriptionResponse;
 import com.server.lms.subscription.repository.SubscriptionRepository;
@@ -31,7 +33,7 @@ public class SubscriptionController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(
-                        ApiResponse.<SubscriptionResponse>builder()
+                        ApiResponse.<PaymentInitiateResponse>builder()
                                 .success(true)
                                 .message("Subscription Created Successfully")
                                 .data(subscriptionService.subscribe(dto))
