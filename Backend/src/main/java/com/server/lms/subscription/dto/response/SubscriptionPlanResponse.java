@@ -34,6 +34,9 @@ public class SubscriptionPlanResponse {
 
     private String adminNotes;
 
+    private Integer maxRenewals = 0;
+
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

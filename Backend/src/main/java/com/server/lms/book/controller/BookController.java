@@ -1,7 +1,7 @@
 package com.server.lms.book.controller;
 
 import com.server.lms.book.dto.request.BookRequest;
-import com.server.lms.book.dto.request.BookSearchRequest;
+import com.server.lms.book.dto.request.BookSearchRequestDTO;
 import com.server.lms.book.dto.response.BookResponse;
 import com.server.lms.book.dto.response.BookStatisticsResponse;
 import com.server.lms.book.service.BookService;
@@ -139,7 +139,7 @@ public class BookController {
 
     @PostMapping("/search")
     public ResponseEntity<ApiResponse<?>> searchBooks(
-            @RequestBody @Valid BookSearchRequest searchRequest
+            @RequestBody @Valid BookSearchRequestDTO searchRequest
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<PageResponse<BookResponse>>builder()

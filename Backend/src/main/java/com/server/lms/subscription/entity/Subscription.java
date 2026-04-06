@@ -17,7 +17,7 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    @ManyToOne
+    @ManyToOne // User can have multiple subscriptions in DB (Expired, Active, Canceled) BUT ONLY ONE SUBSCRIPTION CAN BE ACTIVE AT A TIME
     @JoinColumn(nullable = false)
     private User user;
 
@@ -35,9 +35,6 @@ public class Subscription {
     private Integer maxBooksAllowed;
 
     @Column(nullable = false)
-    private Integer maxDaysOfBook;
-
-    @Column(nullable = false)
     private LocalDate startDate;
 
     @Column(nullable = false)
@@ -51,6 +48,10 @@ public class Subscription {
     private LocalDateTime cancelledAt;
 
     private String cancelledReason;
+
+    private Integer maxRenewals = 0;
+
+    private Integer maxBorrowingDays = 7;
 
     private String notes;
 
@@ -90,7 +91,8 @@ public class Subscription {
             planCode = subscriptionPlan.getPlanCode();
             price = subscriptionPlan.getPrice();
             maxBooksAllowed = subscriptionPlan.getMaxBookAllowed();
-            maxDaysOfBook = subscriptionPlan.getMaxDaysPerBook();
+            maxRenewals = subscriptionPlan.getMaxRenewals();
+            maxBorrowingDays =  subscriptionPlan.getMaxBorrowingDays();
             if (startDate == null) this.startDate = LocalDate.now();
             calculateEndDate();
         }

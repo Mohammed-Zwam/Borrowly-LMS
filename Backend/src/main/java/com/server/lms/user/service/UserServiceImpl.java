@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getUserProfile() {
-         return userMapper.toDTO(this.getCurrentUser());
+        return userMapper.toDTO(this.getCurrentUser());
     }
 
     @Override
@@ -68,6 +68,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Email Or Password Not Found"
+                ));
+    }
+
+    @Override
+    public User findEntityById(String id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User Not Found with id " + id
                 ));
     }
 }

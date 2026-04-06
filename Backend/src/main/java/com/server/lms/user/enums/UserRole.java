@@ -1,4 +1,4 @@
-package com.server.lms.user.entity;
+package com.server.lms.user.enums;
 
 public enum UserRole {
     USER,

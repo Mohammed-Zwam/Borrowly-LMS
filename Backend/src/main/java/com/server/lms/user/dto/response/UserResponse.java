@@ -1,6 +1,6 @@
 package com.server.lms.user.dto.response;
 
-import com.server.lms.user.entity.UserRole;
+import com.server.lms.user.enums.UserRole;
 import lombok.Data;
 import java.time.LocalDateTime;
 
