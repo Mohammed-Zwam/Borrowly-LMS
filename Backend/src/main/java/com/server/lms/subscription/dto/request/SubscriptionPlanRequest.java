@@ -1,9 +1,6 @@
 package com.server.lms.subscription.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 
@@ -30,17 +27,19 @@ public class SubscriptionPlanRequest {
     @NotNull(message = "Price is required")
     private Long price;
 
-
     private String currency = "EGP";
 
     @NotNull(message = "Max books is required")
     @Positive(message = "Max books must be positive")
     private Integer maxBookAllowed;
 
+    @Min(value = 0, message = "Min renewals must be positive")
+    @Max(value = 5, message = "Max renewals must be less than 10")
+    private Integer maxRenewals = 0;
 
-    @NotNull(message = "Max Days per book is required")
-    @Positive(message = "Max days must be positive")
-    private Integer maxDaysPerBook;
+    @Min(value = 7, message = "Min renewals must be positive")
+    @Max(value = 30, message = "Max renewals must be less than 10")
+    private Integer maxBorrowingDays = 7;
 
     @Positive(message = "Display order must be positive")
     private Integer displayOrder = 0;

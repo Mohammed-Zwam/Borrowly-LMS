@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,14 +46,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<SubscriptionResponse> getUserActiveSubscriptions() {
-        var user = userService.getCurrentUser();
-        List<Subscription> subscriptions = subscriptionRepository.findActiveSubscriptionsByUserId(user.getId(), LocalDate.now())
-                .orElse(List.of());
+    public SubscriptionResponse getUserActiveSubscription(String userId) {
+        Subscription subscription = subscriptionRepository.findActiveSubscriptionByUserId(userId, LocalDate.now())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No active subscription found for user with id " + userId
+                ));
 
-        return subscriptions.stream()
-                .map(subscriptionMapper::toDTO)
-                .collect(Collectors.toList());
+        return subscriptionMapper.toDTO(subscription);
     }
 
     @Override

@@ -88,14 +88,16 @@ public class SubscriptionController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<ApiResponse<?>> getUserActiveSubscriptions() {
+    public ResponseEntity<ApiResponse<?>> getUserActiveSubscription(
+            @RequestParam @NotBlank @NotNull String userId
+    ) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
-                        ApiResponse.<List<SubscriptionResponse>>builder()
+                        ApiResponse.<SubscriptionResponse>builder()
                                 .success(true)
-                                .message("Active Subscriptions Retrieved Successfully")
-                                .data(subscriptionService.getUserActiveSubscriptions())
+                                .message("Active Subscription Retrieved Successfully")
+                                .data(subscriptionService.getUserActiveSubscription(userId))
                                 .build()
                 );
     }

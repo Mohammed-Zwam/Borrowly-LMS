@@ -19,7 +19,7 @@ public interface SubscriptionRepository extends BaseRepository<Subscription, Str
         AND s.isActive = true
         AND s.startDate <= :today AND s.endDate >= :today
     """)
-    Optional<List<Subscription>> findActiveSubscriptionsByUserId(
+    Optional<Subscription> findActiveSubscriptionByUserId(
             String userId,
             LocalDate today
     );
