@@ -1,7 +1,7 @@
 package com.server.lms.book.service;
 
 import com.server.lms.book.dto.request.BookRequest;
-import com.server.lms.book.dto.request.BookSearchRequest;
+import com.server.lms.book.dto.request.BookSearchRequestDTO;
 import com.server.lms.book.dto.response.BookResponse;
 import com.server.lms.book.dto.response.BookStatisticsResponse;
 import com.server.lms.book.entity.Book;
@@ -64,7 +64,7 @@ public class BookServiceImpl implements BookService {
     }
 
     public PageResponse<BookResponse> searchBooksByFilters(
-            BookSearchRequest searchRequest
+            BookSearchRequestDTO searchRequest
     ) {
         Specification<Book> spec = Specification
                 .where(BookSpecification.hasTitle(searchRequest.getSearchTerm()))
@@ -78,14 +78,8 @@ public class BookServiceImpl implements BookService {
 
         return PageResponse.<BookResponse>builder()
                 .content(bookMapper.toBookResponseDTOs(result.getContent()))
-                .pageNumber(result.getNumber())
-                .pageSize(result.getSize())
-                .totalElements(result.getTotalElements())
-                .totalPages(result.getTotalPages())
-                .isLastPage(result.isLast())
-                .isFirstPage(result.isFirst())
-                .isEmpty(result.isEmpty())
-                .build();
+                .build()
+                .setPageInfo(result);
     }
 
     @Override
@@ -107,14 +101,14 @@ public class BookServiceImpl implements BookService {
 
     //=========== HELPERS ===========//
 
-    private Book findEntityById(String id) {
+    public Book findEntityById(String id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Book not found with id: " + id
                 ));
     }
 
-    private Pageable getPageable(BookSearchRequest searchRequest) {
+    private Pageable getPageable(BookSearchRequestDTO searchRequest) {
         int size = searchRequest.getSize();
         size = Math.min(size, 20);
         size = Math.max(size, 1);
@@ -122,6 +116,6 @@ public class BookServiceImpl implements BookService {
                 searchRequest.getSortOrder().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC
                 , searchRequest.getSortBy()
         );
-        return PageRequest.of(searchRequest.getPage(), size, sort);
+        return PageRequest.of(searchRequest.getPageNumber(), size, sort);
     }
 }

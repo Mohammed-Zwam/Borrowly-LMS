@@ -21,7 +21,9 @@ public class SubscriptionResponse {
 
     private Integer maxBooksAllowed;
 
-    private Integer maxDaysOfBook;
+    private Integer maxBorrowingDays;
+
+    private Integer maxRenewals;
 
     private LocalDate startDate;
 

@@ -31,7 +31,8 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
     @Override
     public SubscriptionPlanResponse update(String id, SubscriptionPlanRequest dto) {
         SubscriptionPlan subscriptionPlan = findEntityById(id);
-        if (!Objects.equals(dto.getPlanCode(), subscriptionPlan.getPlanCode())) existsByPlanCode(dto.getPlanCode()); // to check if the new plan code used with another plan
+        if (!Objects.equals(dto.getPlanCode(), subscriptionPlan.getPlanCode()))
+            existsByPlanCode(dto.getPlanCode()); // to check if the new plan code used with another plan
         subscriptionPlanMapper.toEntity(subscriptionPlan, dto);
 
         return subscriptionPlanMapper.toDTO(subscriptionPlanRepository.save(subscriptionPlan));
@@ -70,5 +71,11 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
     public void existsByPlanCode(String planCode) {
         if (subscriptionPlanRepository.existsByPlanCode(planCode))
             throw new DuplicateFieldException("Subscription Plan Code Already Exists");
+    }
+
+    @Override
+    public SubscriptionPlan getByPlanCode(String planCode) {
+        return subscriptionPlanRepository.findByPlanCode(planCode)
+                .orElseThrow(() -> new EntityNotFoundException("Subscription Plan Not Found"));
     }
 }
