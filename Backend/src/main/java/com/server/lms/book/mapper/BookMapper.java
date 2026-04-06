@@ -40,7 +40,7 @@ public abstract class BookMapper {
     public abstract List<BookResponse> toBookResponseDTOs(List<Book> books);
 
     @AfterMapping
-    public void validateCategory(BookRequest dto, @MappingTarget Book book) {
+    public void validateBook(BookRequest dto, @MappingTarget Book book) {
         if (dto.getCategoryId() == null) {
             book.setCategory(null);
         } else {
@@ -52,6 +52,8 @@ public abstract class BookMapper {
         if (bookRepository.existsByIsbn(book.getIsbn()))
             throw new DuplicateFieldException("Book with ISBN: " + book.getIsbn() + " already exists");
 
-        book.isAvailableCopiesValid();
+        if (!book.isAvailableCopiesValid()) {
+            throw new IllegalArgumentException("Available copies must be less than or equal to total copies");
+        }
     }
 }

@@ -35,13 +35,11 @@ public class SubscriptionPlan {
     @Column(nullable = false)
     private Long price;
 
-
     private String currency = "EGP";
 
     @Column(nullable = false)
     @Positive(message = "Max books must be positive")
     private Integer maxBookAllowed;
-
 
     @Column(nullable = false)
     @Positive(message = "Max days must be positive")
@@ -51,6 +49,7 @@ public class SubscriptionPlan {
     private Integer displayOrder = 0;
 
     private Boolean isActive = true;
+
     private Boolean isFeatured = false;
 
     private String badgeText;
@@ -59,6 +58,11 @@ public class SubscriptionPlan {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+
+    private Integer maxRenewals = 0;
+
+    private Integer maxBorrowingDays = 0;
 
 
     @UpdateTimestamp

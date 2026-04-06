@@ -12,7 +12,7 @@ import java.util.List;
 public interface SubscriptionService extends BaseService<Subscription, String> {
     SubscriptionResponse getById(String id);
 
-    List<SubscriptionResponse> getUserActiveSubscriptions();
+    SubscriptionResponse getUserActiveSubscription(String userId);
 
     PageResponse<SubscriptionResponse> getAllSubscriptions();
 

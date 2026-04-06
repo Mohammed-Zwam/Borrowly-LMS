@@ -101,7 +101,7 @@ public class BookServiceImpl implements BookService {
 
     //=========== HELPERS ===========//
 
-    private Book findEntityById(String id) {
+    public Book findEntityById(String id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Book not found with id: " + id
