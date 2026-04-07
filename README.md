@@ -1,7 +1,5 @@
-<h1>
-    <center>
-        Borrowly | Library Management System
-    </center>
+<h1 align="center">
+    Borrowly | Library Management System
 </h1>
 
 <p align="center">
@@ -28,7 +26,6 @@
   </a>
 </p>
 
----
 
 **Borrowly-LMS** is a comprehensive Library Management System built with Spring Boot, designed to digitize and automate library operations. It provides a full platform for managing books, user subscriptions, book loans, payments, and penalties with modern, scalable architecture.
 
