@@ -20,7 +20,7 @@ public class PaymentEventListener {
         switch (payment.getPaymentType()) {
             case MEMBERSHIP:
                 subscriptionService.activateSubscription(payment.getSubscription().getId(), payment.getId());
-            case FINE:
+            case PENALTY:
             case LOST_BOOK_PENALITY:
             case DAMAGED_BOOK_PENALITY:
                 break;
