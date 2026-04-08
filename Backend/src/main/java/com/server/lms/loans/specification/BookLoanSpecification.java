@@ -58,27 +58,24 @@ public class BookLoanSpecification {
 
 
     public static Specification<BookLoan> buildSpecificationByBookLoanSearchRequest(BookLoanSearchRequest bookLoanSearchRequest) {
-        Specification<BookLoan> specification = null;
+        Specification<BookLoan> specification = Specification.unrestricted();
 
         if (bookLoanSearchRequest.isOverdueOnly()) {
-            specification = Specification.where(byOverdueOnly(LocalDate.now()));
+            specification = specification.and(byOverdueOnly(LocalDate.now()));
         } else if (bookLoanSearchRequest.isUnpaidFinesOnly()) {
             specification = Specification.where(byUnpaidFinesOnly());
         } else {
             if (bookLoanSearchRequest.getUserId() != null) {
-                specification = Specification.where(hasUserId(bookLoanSearchRequest.getUserId()));
+                specification = specification.and(hasUserId(bookLoanSearchRequest.getUserId()));
             }
             if (bookLoanSearchRequest.getBookId() != null) {
-                specification = specification == null ? Specification.where(hasBookId(bookLoanSearchRequest.getBookId()))
-                        : specification.and(hasBookId(bookLoanSearchRequest.getBookId()));
+                specification = specification.and(hasBookId(bookLoanSearchRequest.getBookId()));
             }
             if (bookLoanSearchRequest.getBookLoanState() != null) {
-                specification = specification == null ? Specification.where(hasBookLoanState(bookLoanSearchRequest.getBookLoanState()))
-                        : specification.and(hasBookLoanState(bookLoanSearchRequest.getBookLoanState()));
+                specification = specification.and(hasBookLoanState(bookLoanSearchRequest.getBookLoanState()));
             }
             if (bookLoanSearchRequest.getStartDate() != null && bookLoanSearchRequest.getEndDate() != null) {
-                specification = specification == null ? Specification.where(byDateRange(bookLoanSearchRequest.getStartDate(), bookLoanSearchRequest.getEndDate()))
-                        : specification.and(byDateRange(bookLoanSearchRequest.getStartDate(), bookLoanSearchRequest.getEndDate()));
+                specification = specification.and(byDateRange(bookLoanSearchRequest.getStartDate(), bookLoanSearchRequest.getEndDate()));
             }
         }
 

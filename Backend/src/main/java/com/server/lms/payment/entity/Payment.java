@@ -3,6 +3,7 @@ package com.server.lms.payment.entity;
 import com.server.lms.payment.enums.PaymentProvider;
 import com.server.lms.payment.enums.PaymentStatus;
 import com.server.lms.payment.enums.PaymentType;
+import com.server.lms.penalty.entity.Penalty;
 import com.server.lms.subscription.entity.Subscription;
 import com.server.lms.user.entity.User;
 import jakarta.persistence.*;
@@ -31,6 +32,9 @@ public class Payment {
 
     @ManyToOne
     private Subscription subscription;
+
+    @ManyToOne
+    private Penalty penalty;
 
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;

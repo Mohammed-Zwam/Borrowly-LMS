@@ -38,12 +38,10 @@ public class StripePaymentGateway implements PaymentGateway {
             if (payment.getPaymentType() == PaymentType.MEMBERSHIP) {
                 SubscriptionPlan plan = subscriptionPlanService.getByPlanCode(metadata.get("subscription_plan_code"));
                 amountInCents = plan.getPrice() * 100; // convert dollar to cent
-                productName = plan.getName();
-            } else if (payment.getPaymentType() == PaymentType.FINE) {
-                // TODO
-
+                productName = "Library Subscription - " + plan.getName();
+            } else if (payment.getPaymentType() == PaymentType.PENALTY) {
                 amountInCents = payment.getAmount() * 100;
-                productName = "Library Fine";
+                productName = "Library Penalty - " + payment.getDescription();
 
             } else {
                 throw new PaymentFailureException("Unsupported payment type");
@@ -105,7 +103,7 @@ public class StripePaymentGateway implements PaymentGateway {
                 SubscriptionPlan subscriptionPlan = subscriptionPlanService.getByPlanCode(metadata.get("subscription_plan_code"));
                 metadata.put("isValidPayment", String.valueOf(subscriptionPlan.getPrice() == amountInCurrency));
                 return metadata;
-            } else if (paymentType.equals(PaymentType.FINE.toString())) {
+            } else if (paymentType.equals(PaymentType.PENALTY.toString())) {
             /*
                 TODO: FINE LOGIC
                 String fineId = notes.getLong( key: "fine_id");

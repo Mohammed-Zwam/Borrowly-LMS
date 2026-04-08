@@ -89,7 +89,7 @@ public class BookLoanController {
                 );
     }
 
-    @GetMapping("/user")
+    @GetMapping("/me")
     public ResponseEntity<ApiResponse<?>> getUserBookLoans(
             @ParameterObject @ModelAttribute PageRequestDTO pageRequest,
             @RequestParam(required = false) BookLoanState bookLoanState
