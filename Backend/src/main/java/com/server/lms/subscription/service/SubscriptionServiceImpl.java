@@ -95,6 +95,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .paymentType(PaymentType.MEMBERSHIP)
                 .paymentProvider(dto.getPaymentProvider())
                 .subscriptionId(subscription.getId())
+                .description("Subscription for " + subscription.getSubscriptionPlan().getName())
                 .build();
 
         return paymentService.initiatePayment(paymentInitiateRequest);

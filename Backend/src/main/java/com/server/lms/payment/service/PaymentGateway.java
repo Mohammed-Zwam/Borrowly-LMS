@@ -32,9 +32,9 @@ public interface PaymentGateway {
             metadata.put("subscription_id", String.valueOf(payment.getSubscription().getId()));
             metadata.put("subscription_plan_code", payment.getSubscription().getSubscriptionPlan().getPlanCode());
             metadata.put("payment_type", PaymentType.MEMBERSHIP.name());
-        } else if (payment.getPaymentType() == PaymentType.FINE) {
-            // TODO: metadata.put("fine_id", String.valueOf(payment.getFine().getId()));
-            metadata.put("payment_type", PaymentType.FINE.name());
+        } else if (payment.getPaymentType() == PaymentType.PENALTY) {
+            metadata.put("penalty_id", String.valueOf(payment.getPenalty().getId()));
+            metadata.put("payment_type", PaymentType.PENALTY.name());
         }
         return metadata;
     }
