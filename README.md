@@ -33,8 +33,8 @@
 **Borrowly-LMS** is a comprehensive Library Management System built with Spring Boot, designed to digitize and automate library operations. It provides a full platform for managing books, user subscriptions, book loans, payments, and penalties with modern, scalable architecture.
  
 
-> [!WARNING]
-> **NOTE:** This project is currently **under development**. Additional features will be added, existing functionalities will be enhanced, and frontend development is planned.
+> [!NOTE]
+> This project is currently **UNDER DEVELOPMENT**. Additional features will be added, existing functionalities will be enhanced, and **FRONT-END DEVELOPMENT IS PLANNED**.
 
 
 ---
