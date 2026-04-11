@@ -62,23 +62,24 @@ public class BookLoanSpecification {
 
         if (bookLoanSearchRequest.isOverdueOnly()) {
             specification = specification.and(byOverdueOnly(LocalDate.now()));
-        } else if (bookLoanSearchRequest.isUnpaidFinesOnly()) {
+        }
+        if (bookLoanSearchRequest.isUnpaidFinesOnly()) {
             specification = Specification.where(byUnpaidFinesOnly());
-        } else {
-            if (bookLoanSearchRequest.getUserId() != null) {
-                specification = specification.and(hasUserId(bookLoanSearchRequest.getUserId()));
-            }
-            if (bookLoanSearchRequest.getBookId() != null) {
-                specification = specification.and(hasBookId(bookLoanSearchRequest.getBookId()));
-            }
-            if (bookLoanSearchRequest.getBookLoanState() != null) {
-                specification = specification.and(hasBookLoanState(bookLoanSearchRequest.getBookLoanState()));
-            }
-            if (bookLoanSearchRequest.getStartDate() != null && bookLoanSearchRequest.getEndDate() != null) {
-                specification = specification.and(byDateRange(bookLoanSearchRequest.getStartDate(), bookLoanSearchRequest.getEndDate()));
-            }
+        }
+        if (bookLoanSearchRequest.getUserId() != null) {
+            specification = specification.and(hasUserId(bookLoanSearchRequest.getUserId()));
+        }
+        if (bookLoanSearchRequest.getBookId() != null) {
+            specification = specification.and(hasBookId(bookLoanSearchRequest.getBookId()));
+        }
+        if (bookLoanSearchRequest.getBookLoanState() != null) {
+            specification = specification.and(hasBookLoanState(bookLoanSearchRequest.getBookLoanState()));
+        }
+        if (bookLoanSearchRequest.getStartDate() != null && bookLoanSearchRequest.getEndDate() != null) {
+            specification = specification.and(byDateRange(bookLoanSearchRequest.getStartDate(), bookLoanSearchRequest.getEndDate()));
         }
 
         return specification;
+
     }
 }

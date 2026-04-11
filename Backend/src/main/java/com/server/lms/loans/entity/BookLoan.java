@@ -44,7 +44,6 @@ BookLoan {
     @Column(nullable = false)
     private LocalDate dueDate; // require due date
 
-    @Column(nullable = false)
     private LocalDate returnDate; // actual due date
 
 

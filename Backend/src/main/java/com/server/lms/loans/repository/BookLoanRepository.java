@@ -43,4 +43,7 @@ public interface BookLoanRepository extends BaseRepository<BookLoan, String>, Jp
             """)
     int countOverdueBookLoansByUser(String userId);
 
+
+    boolean existsByUserIdAndBookIdAndBookLoanState(String userId, String bookId, BookLoanState bookLoanState);
+
 }

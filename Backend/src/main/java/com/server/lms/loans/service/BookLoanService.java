@@ -25,4 +25,6 @@ public interface BookLoanService extends BaseService<BookLoan, String> {
     PageResponse<BookLoanResponse> getAllBookLoans(BookLoanSearchRequest bookLoanSearchRequest); // FOR ADMIN
 
     Integer updateOverdueBookLoan(); // to update status of missed book loans TODO: SCHEDULING JOB
+
+    boolean existsByUserIdAndBookIdAndStatus(String userId, String bookId, BookLoanState state);
 }
