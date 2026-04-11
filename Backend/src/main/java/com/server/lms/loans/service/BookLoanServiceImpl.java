@@ -60,9 +60,12 @@ public class BookLoanServiceImpl implements BookLoanService {
 
         Book book = bookService.findEntityById(bookLoanRequest.getBookId());
 
+//        if (subscription)
+
         if (!book.getIsActive()) {
             throw new BookLoanException("Book is not active for borrowing");
         }
+
         if (book.getAvailableCopies() <= 0) {
             throw new BookLoanException("Book is not available for borrowing");
         }
@@ -212,6 +215,11 @@ public class BookLoanServiceImpl implements BookLoanService {
         }
 
         return updateCount;
+    }
+
+    @Override
+    public boolean existsByUserIdAndBookIdAndStatus(String userId, String bookId, BookLoanState state) {
+        return bookLoanRepository.existsByUserIdAndBookIdAndBookLoanState(userId, bookId, state);
     }
 
     @Override
