@@ -12,6 +12,7 @@ public class PageRequestDTO {
     private String sortBy = "createdAt";
     private String sortOrder = "desc";
 
+
     public Pageable generatePageable() {
         Sort sort = Sort.by(sortOrder.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return PageRequest.of(pageNumber, size, sort);
