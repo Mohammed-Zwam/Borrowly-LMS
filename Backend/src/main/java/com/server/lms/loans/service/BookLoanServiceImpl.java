@@ -185,6 +185,7 @@ public class BookLoanServiceImpl implements BookLoanService {
                 .setPageInfo(bookLoansPage);
     }
 
+
     @Override
     public PageResponse<BookLoanResponse> getAllBookLoans(BookLoanSearchRequest bookLoanSearchRequest) {
         Page<BookLoan> bookLoansPage;
