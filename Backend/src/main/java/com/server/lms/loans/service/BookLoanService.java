@@ -11,6 +11,8 @@ import com.server.lms.loans.dto.response.BookLoanResponse;
 import com.server.lms.loans.entity.BookLoan;
 import com.server.lms.loans.enums.BookLoanState;
 
+import java.util.List;
+
 public interface BookLoanService extends BaseService<BookLoan, String> {
     BookLoanResponse borrowBook(BookLoanRequest bookLoanRequest);
 

@@ -3,7 +3,6 @@ package com.server.lms.bookmark.controller;
 import com.server.lms._shared.dto.ApiResponse;
 import com.server.lms._shared.dto.PageRequestDTO;
 import com.server.lms._shared.dto.PageResponse;
-import com.server.lms.book.dto.response.BookResponse;
 import com.server.lms.bookmark.dto.response.BookmarkResponse;
 import com.server.lms.bookmark.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +10,6 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/bookmarks")
