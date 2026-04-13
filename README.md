@@ -4,10 +4,16 @@
     </center>
 </h1>
 
+
 <p align="center">
   <a href="https://spring.io/projects/spring-boot">
     <img src="https://img.shields.io/badge/Spring%20Boot-4.0.4-brightgreen" alt="Spring Boot">
   </a>
+
+  <a href="https://spring.io/projects/spring-boot">
+    <img src="https://img.shields.io/badge/angular-17-blue?logo=angular&logoColor=white" alt="Angular">
+  </a>
+  
   <a href="https://www.java.com/">
     <img src="https://img.shields.io/badge/Java-17-blue" alt="Java 17">
   </a>
@@ -30,12 +36,10 @@
 
 ---
 
-**Borrowly-LMS** is a comprehensive Library Management System built with Spring Boot, designed to digitize and automate library operations. It provides a full platform for managing books, user subscriptions, book loans, payments, and penalties with modern, scalable architecture.
- 
+**Borrowly-LMS** is a comprehensive Library Management System built with Spring Boot, designed to digitize and automate library operations. It provides a full platform for managing books, user subscriptions, book loans, payments, penalties, reservations, reviews, and bookmarks with modern, scalable architecture.
 
 > [!NOTE]
 > This project is currently **UNDER DEVELOPMENT**. Additional features will be added, existing functionalities will be enhanced, and **FRONT-END DEVELOPMENT IS PLANNED**.
-
 
 ---
 
@@ -43,10 +47,11 @@
 ![Database Design](./ERD/ERD.png)
 
 - Organized and simple design for easy reference  
-- Key tables: Users, Books, Categories, Subscriptions, BookLoans, Penalties, Payments
+- Key tables: Users, Books, Categories, Subscriptions, BookLoans, Penalties, Payments, Reservations, BookReviews, Bookmarks
+
 ---
 
-##  Key Features
+## Key Features
 
 ### 1. Book & Category Management
 - Organize and catalog books by categories
@@ -71,7 +76,28 @@
 - Track overdue books and overdue days
 - Support multiple loan states (BORROWED, OVERDUE, RETURNED)
 
-### 5. Penalty & Fine Management
+### 5. Book Reservation System
+- Reserve books with queue position tracking
+- Multiple reservation states (PENDING, AVAILABLE, FULFILLED, CANCELLED, EXPIRED)
+- Automatic availability notifications
+- Time-bound reservation windows
+- Support for expiration handling
+- Notes and comments on reservations
+
+### 6. Book Reviews & Ratings
+- User-submitted book reviews with star ratings (1-5)
+- Review titles and detailed descriptions
+- Track review creation and updates
+- User-specific reviews per book
+- Support for aggregated ratings and reviews
+
+### 7. Bookmark Management
+- Create personal bookmarks for favorite books
+- Add notes to bookmarked books
+- Personal reading list organization
+- Track when books were bookmarked
+
+### 8. Penalty & Fine Management
 - Automatic penalty generation for overdue or damaged books
 - Multiple penalty types: Delay, Damage
 - Track penalty states: UNPAID, PARTIALLY_PAID, PAID, CANCELLED
@@ -79,31 +105,32 @@
 - Cancel penalties with reasons and audit trail
 - Payment integration for penalty settlement
 
-### 6. Integrated Payment Processing
+### 9. Integrated Payment Processing
 - Stripe payment gateway for secure transactions
 - Support for subscription and penalty payments
 - Track payment status: Initiated, Completed, Failed
 - Payment provider management and transaction tracking
 - Comprehensive payment history and audit trail
 
-### 7. Advanced Search & Filtering
+### 10. Advanced Search & Filtering
 - JPA Specifications-based complex queries
-- Filter penalties by state, type, and user
+- Filter by multiple criteria (state, type, user, dates)
 - Paginated results for efficient retrieval
+- Advanced book search and filtering
 
-### 8. Security & Authentication
+### 11. Security & Authentication
 - JWT-based authentication
 - Secure password management
 - Role-based access control
 
-### 9. Communication & Notifications
-- Email integration for notifications (payment confirmations, password resets)
+### 12. Communication & Notifications
+- Email integration for notifications (payment confirmations, password resets, reservation updates)
 - Thymeleaf templates for formatted emails
 
 ---
 
-##  Tech Stack
-- **Framework:** Spring Boot 4.0.4  
+## Tech Stack
+- **Framework:** Spring Boot 4.0.4
 - **Database:** PostgreSQL with JPA/Hibernate  
 - **Authentication:** JWT
 - **DTO Mapping:** MapStruct  
@@ -115,10 +142,11 @@
 
 ---
 
-##  Architecture Highlights
-- **Modular Design:** Separate modules for each domain (auth, book, loans, payment, penalty, subscription, user)  
-- **Service Layer:** Encapsulates business logic  
+## Architecture Highlights
+- **Modular Design:** Separate modules for each domain (auth, book, loans, payment, penalty, subscription, user, reservation, reviews, bookmark)
+- **Service Layer:** Encapsulates business logic
 - **Repository Pattern:** Data access with JPA repositories  
 - **DTO Pattern:** Separate entity and API models  
 - **Exception Handling:** Custom exception handling for business logic errors  
 - **Shared Utilities:** Common functionality in `_shared` module (DTOs, configs, email, audit trails)
+
