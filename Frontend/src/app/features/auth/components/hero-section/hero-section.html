@@ -1,0 +1,22 @@
+<aside
+  class="d-none d-lg-flex position-relative text-white align-items-center justify-content-center hero-section"
+>
+  <div class="position-absolute top-0 start-0 w-100 h-100">
+    <img [src]="imgSrc" class="w-100 h-100 object-fit-cover" />
+    <div class="overlay"></div>
+  </div>
+
+  <div class="position-relative z-1 w-75">
+    <app-logo></app-logo>
+
+    <h1 class="fw-bold display-5 mb-4">
+      {{ title }}
+    </h1>
+
+    <p class="text-white fs-5 mb-5">
+      {{ description }}
+    </p>
+
+    <ng-content></ng-content>
+  </div>
+</aside>

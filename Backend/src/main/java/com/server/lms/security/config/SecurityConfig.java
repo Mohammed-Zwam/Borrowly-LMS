@@ -64,7 +64,7 @@ public class SecurityConfig {
                 corsConfig.setAllowCredentials(true);
                 corsConfig.setAllowedOrigins(
                         List.of(
-                                "http://localhost:4000"
+                                "http://localhost:4200"
                         )
                 ); // Client URLs
                 corsConfig.addAllowedHeader("*");
