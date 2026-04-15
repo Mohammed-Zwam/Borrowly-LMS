@@ -32,11 +32,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(userMapper.toEntity(dto));
     }
 
+
     @Override
-    public UserResponse getCurrentUser() {
+    public User getCurrentUser() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = findEntityByEmail(userEmail);
-        return userMapper.toDTO(user);
+        return findEntityByEmail(userEmail);
+    }
+
+    @Override
+    public UserResponse getUserProfile() {
+        return userMapper.toDTO(this.getCurrentUser());
     }
 
     @Override
@@ -63,6 +68,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Email Or Password Not Found"
+                ));
+    }
+
+    @Override
+    public User findEntityById(String id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User Not Found with id " + id
                 ));
     }
 }

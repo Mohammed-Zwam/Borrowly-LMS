@@ -1,5 +1,7 @@
 package com.server.lms.user.entity;
 
+import com.server.lms.user.enums.AuthProvider;
+import com.server.lms.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,7 +28,7 @@ public class User implements UserDetails {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole role = UserRole.USER;
 
     private String password;
 

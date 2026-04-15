@@ -1,5 +1,6 @@
 package com.server.lms.user.service;
 
+import com.server.lms._shared.base.BaseService;
 import com.server.lms.user.dto.request.UserRequest;
 import com.server.lms.user.dto.response.UserResponse;
 import com.server.lms.user.entity.User;
@@ -7,11 +8,13 @@ import com.server.lms.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends BaseService<User, String> {
 
     User create(UserRequest dto);
 
-    UserResponse getCurrentUser();
+    User getCurrentUser();
+
+    UserResponse getUserProfile();
 
     List<UserResponse> getAllUsers();
 

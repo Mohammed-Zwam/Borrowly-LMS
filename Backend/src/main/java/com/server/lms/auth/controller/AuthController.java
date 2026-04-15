@@ -63,7 +63,7 @@ public class AuthController {
                 .body(
                         ApiResponse.<String>builder()
                                 .success(true)
-                                .message("Rest Token Sent Successfully, Check Your Email ^-^")
+                                .message("Reset Token Sent Successfully, Check Your Email ^-^")
                                 .data("CHECK EMAIL")
                                 .build()
                 );
