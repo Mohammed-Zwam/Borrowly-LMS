@@ -1,0 +1,110 @@
+
+<div class="d-flex min-vh-100">
+  <app-hero-section
+    class="col-lg-6"
+    [imgSrc]="'/assets/bg6.jpg'"
+    [title]="'Join to the community'"
+    [description]="'Experience a library system designed for focus and clarity.'"
+  >
+    <div class="row g-3">
+      <div class="col-6">
+        <div class="p-3 border rounded text-center bg-glass">
+          <h4>12k+</h4>
+          <small class="text-uppercase text-light">Active Readers</small>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-3 border rounded text-center bg-glass">
+          <h4>850k</h4>
+          <small class="text-uppercase text-white">Books Shared</small>
+        </div>
+      </div>
+    </div>
+  </app-hero-section>
+
+  <!-- Right Side -->
+  <main
+    class="col-12 col-lg-6 d-flex align-items-center justify-content-center p-4 p-lg-5 bg-white overflow-auto"
+  >
+    <div style="max-width: 400px; width: 100%">
+      <div class="mb-4">
+        <h2 class="fw-bold">Welcome Back</h2>
+        <p class="text-muted">Sign in to your account to continue.</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label small text-uppercase text-muted fw-bold">Email</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input 
+              type="email" 
+              class="form-control" 
+              [class.is-invalid]="isFieldInvalid('email')"
+              formControlName="email" 
+            />
+          </div>
+          <div class="invalid-feedback d-block" *ngFor="let error of getEmailErrors()">
+            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <label class="form-label small text-uppercase text-muted fw-bold">Password</label>
+            <a routerLink="/auth/forgot-password" class="small text-primary">Forgot?</a>
+          </div>
+
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid('password')"
+              formControlName="password"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              (click)="togglePasswordVisibility()"
+            >
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback d-block" *ngFor="let error of getPasswordErrors()">
+            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+          </div>
+        </div>
+
+        <!-- Remember -->
+        <div class="form-check mb-3">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="rememberMe"
+            formControlName="rememberMe"
+          />
+          <label for="rememberMe" class="form-check-label">Remember me</label>
+        </div>
+
+        <!-- Submit -->
+        <button
+          class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2 p-2"
+          [disabled]="loading"
+        >
+          Sign In
+          <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+        </button>
+      </form>
+
+      <div class="text-center mt-4 pt-4 border-top">
+        <p class="text-muted">
+          Don't have an account?
+          <a routerLink="/auth/signup" class="fw-bold text-primary">Sign Up</a>
+        </p>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,145 @@
+<div class="min-h-screen flex">
+  <!-- Left Side - Hero Section -->
+  <aside class="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-blue-600 to-blue-400 overflow-hidden items-center justify-center">
+    <div class="absolute inset-0 z-0">
+      <img
+        alt="Library Community"
+        class="w-full h-full object-cover opacity-60 mix-blend-overlay"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYJYoIOBPgsbYc7leGYQBAVK3yDyCBKOoWS0COeKto23ElCrMdDYddblJvX2gvRgY65lwwU608_U87nxwWOTbYccdYugc6TOsc3xIgzJxuVZK_cIhVHqAN96CzOgr1hHfmYBYuQaHrYPJxBR_pOiXpB7iQq2esNiekXU1uR2yXrT9QIHq5dnBBgy6nORodKnwkjpsx_xas-Rfv54V0oHxFWst2Y9rQlA_PaQocVe6rV0s_ZdG10KsrzJeRS0JnrBoIld6RZTadO9A"
+      />
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-600/80 to-blue-400/40"></div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-10 px-16 max-w-2xl text-white">
+      <div class="flex items-center gap-3 mb-12">
+        <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-blue-600">
+          <i class="bi bi-book-fill"></i>
+        </div>
+        <span class="text-2xl font-bold">Borrowly-LMS</span>
+      </div>
+
+      <h1 class="text-5xl font-bold mb-6 leading-tight">
+        Welcome back to your
+        <br />
+        <span class="text-blue-100">literary sanctuary.</span>
+      </h1>
+
+      <p class="text-lg opacity-90 font-light leading-relaxed mb-12">
+        Access your personalized library, track your reading progress, and discover books shared by our community.
+      </p>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20">
+          <div class="text-3xl font-bold mb-1">12k+</div>
+          <div class="text-sm font-medium uppercase tracking-wider opacity-70">Active Readers</div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20">
+          <div class="text-3xl font-bold mb-1">850k</div>
+          <div class="text-sm font-medium uppercase tracking-wider opacity-70">Books Shared</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Side - Login Form -->
+  <main class="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-white overflow-y-auto">
+    <div class="w-full max-w-md">
+      <!-- Header -->
+      <div class="mb-10">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+        <p class="text-gray-600 font-medium">Sign in to your account to continue.</p>
+      </div>
+
+      <!-- Toast Messages -->
+      <p-toast></p-toast>
+
+      <!-- Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+        <!-- Email -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold uppercase tracking-widest text-gray-500 px-2">Email Address</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+              <i class="bi bi-envelope"></i>
+            </span>
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="name@example.com"
+              class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder:text-gray-400 text-gray-900 font-medium"
+              [class.border-red-500]="isFieldInvalid('email')"
+            />
+          </div>
+          <p class="text-xs text-red-600 px-2" *ngIf="isFieldInvalid('email')">
+            {{ getFieldError('email') }}
+          </p>
+        </div>
+
+        <!-- Password -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center px-2 mb-2">
+            <label class="text-xs font-bold uppercase tracking-widest text-gray-500">Password</label>
+            <a routerLink="/auth/forgot-password" class="text-xs text-blue-600 hover:underline font-semibold">
+              Forgot Password?
+            </a>
+          </div>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+              <i class="bi bi-lock"></i>
+            </span>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="••••••••"
+              class="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder:text-gray-400 text-gray-900 font-medium"
+              [class.border-red-500]="isFieldInvalid('password')"
+            />
+            <button
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          <p class="text-xs text-red-600 px-2" *ngIf="isFieldInvalid('password')">
+            {{ getFieldError('password') }}
+          </p>
+        </div>
+
+        <!-- Remember Me -->
+        <div class="flex items-center gap-3 py-2">
+          <input
+            type="checkbox"
+            formControlName="rememberMe"
+            id="rememberMe"
+            class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          <label for="rememberMe" class="text-sm text-gray-600 cursor-pointer"> Remember me for 30 days </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold rounded-lg shadow-md hover:shadow-lg hover:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
+          <span *ngIf="!loading">Sign In</span>
+          <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span *ngIf="loading">Signing in...</span>
+          <i class="bi bi-arrow-right" *ngIf="!loading"></i>
+        </button>
+      </form>
+
+      <!-- Signup Link -->
+      <div class="mt-10 pt-10 border-t border-gray-200 text-center">
+        <p class="text-gray-600 font-medium">
+          Don't have an account?
+          <a routerLink="/auth/signup" class="text-blue-600 font-bold hover:underline ml-1">Sign Up</a>
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
+

@@ -1,0 +1,197 @@
+<div class="d-flex min-vh-100">
+  <app-hero-section
+    class="col-lg-6"
+    [imgSrc]="'/assets/bg4.png'"
+    [title]="'Join the sanctuary of curated knowledge.'"
+    [description]="'Experience a library system designed for focus and clarity.'"
+  >
+    <div class="row g-3">
+      <div class="col-6">
+        <div class="p-3 border rounded text-center bg-glass">
+          <h4>12k+</h4>
+          <small class="text-uppercase text-light">Active Readers</small>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-3 border rounded text-center bg-glass">
+          <h4>850k</h4>
+          <small class="text-uppercase text-white">Books Shared</small>
+        </div>
+      </div>
+    </div>
+  </app-hero-section>
+
+  <!-- Right Side -->
+  <main
+    class="col-12 col-lg-6 d-flex align-items-center justify-content-center p-4 p-lg-5 bg-white overflow-auto"
+  >
+    <div style="max-width: 420px; width: 100%">
+      <div class="mb-4">
+        <h2 class="fw-bold">Create Account</h2>
+        <p class="text-muted">Start your journey into the Library.</p>
+      </div>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <!-- Name -->
+        <div class="mb-3">
+          <label class="form-label small text-uppercase text-muted fw-bold">Full Name</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+            <input 
+              type="name" 
+              class="form-control" 
+              [class.is-invalid]="isFieldInvalid('name')"
+              formControlName="name" 
+            />
+          </div>
+          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('name')">
+            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label small text-uppercase text-muted fw-bold">Email</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input 
+              type="email" 
+              class="form-control" 
+              [class.is-invalid]="isFieldInvalid('email')"
+              formControlName="email" 
+            />
+          </div>
+          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('email')">
+            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+          </div>
+        </div>
+
+        <!-- Username -->
+        <div class="mb-3">
+          <label class="form-label small text-uppercase text-muted fw-bold">Username</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input 
+              type="username" 
+              class="form-control" 
+              [class.is-invalid]="isFieldInvalid('username')"
+              formControlName="username" 
+            />
+          </div>
+          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('username')">
+            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-3">
+          <label class="form-label small text-uppercase text-muted fw-bold">Phone</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-phone"></i></span>
+            <input 
+              type="phone" 
+              class="form-control" 
+              [class.is-invalid]="isFieldInvalid('phone')"
+              formControlName="phone" 
+            />
+          </div>
+          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('phone')">
+            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label class="form-label small text-uppercase text-muted fw-bold">Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid('password')"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              (click)="togglePasswordVisibility()"
+            >
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('password')">
+            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+          </div>
+
+          <!-- Strength -->
+          <div class="mt-2" *ngIf="signupForm.get('password')?.value">
+            <small class="text-muted">Strength:</small>
+            <div class="progress" style="height: 6px">
+              <div
+                class="progress-bar"
+                [style.width.%]="passwordStrength * 20"
+                [style.backgroundColor]="getPasswordStrengthColor()"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirm -->
+        <div class="mb-3">
+          <label class="form-label small text-uppercase text-muted fw-bold">Confirm Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-shield-check"></i></span>
+            <input
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid('confirmPassword') || (signupForm.errors?.['passwordMismatch'] && signupForm.get('confirmPassword')?.touched)"
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              formControlName="confirmPassword"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+            >
+              <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback d-block" *ngFor="let error of getConfirmPasswordErrors()">
+            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="mb-3">
+          <div class="form-check">
+            <input 
+              class="form-check-input" 
+              [class.is-invalid]="isFieldInvalid('agreeToTerms')"
+              type="checkbox" 
+              formControlName="agreeToTerms" 
+              id="agreeTerms"
+            />
+            <label class="form-check-label" for="agreeTerms">
+              I agree to Terms & Privacy Policy
+            </label>
+          </div>
+          <div class="invalid-feedback d-block" *ngFor="let error of getTermsErrors()">
+            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button class="btn btn-primary w-100" [disabled]="loading">
+          Create Account
+          <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+        </button>
+      </form>
+
+      <div class="text-center mt-4 pt-4 border-top">
+        <p class="text-muted">
+          Already have an account?
+          <a routerLink="/auth/login" class="fw-bold text-primary">Login</a>
+        </p>
+      </div>
+    </div>
+  </main>
+</div>

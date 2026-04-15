@@ -113,9 +113,9 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Failed To Save Token, " + ex.getMessage());
         }
 
-        String resetLink = resetPasswordUrl + generatedToken;
+        String resetLink = resetPasswordUrl + "?token=" + generatedToken;
 
-        String emailSubject = "Password Reset Requested | Borrowly";
+        String emailSubject = "Borrowly-LMS | Password Reset Requested";
 
         Map<String, Object> variables = Map.of(
                 "name", user.getName(),
