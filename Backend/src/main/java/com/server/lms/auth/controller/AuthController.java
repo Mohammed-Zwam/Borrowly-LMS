@@ -23,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<?>> signup(
+    public ResponseEntity<ApiResponse<AuthResponse>> signup(
             @RequestBody @Valid UserRequest userDTO
     ) {
         return ResponseEntity
@@ -38,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<?>> login(
+    public ResponseEntity<ApiResponse<AuthResponse>> login(
             @RequestBody @Valid LoginRequest loginRequest
             ) {
         return ResponseEntity
@@ -54,7 +54,7 @@ public class AuthController {
 
 
     @PostMapping("/forget-password")
-    public ResponseEntity<ApiResponse<?>> forgetPassword(
+    public ResponseEntity<ApiResponse<String>> forgetPassword(
             @RequestBody @Valid ForgetPasswordRequest forgetPasswordRequest
     ) {
         authService.createPasswordResetToken(forgetPasswordRequest.getEmail());
@@ -70,7 +70,7 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<ApiResponse<?>> resetPassword(
+    public ResponseEntity<ApiResponse<String>> resetPassword(
             @RequestBody @Valid RestPasswordRequest restPasswordRequest
     ) {
         authService.resetPassword(restPasswordRequest.getToken(), restPasswordRequest.getPassword());

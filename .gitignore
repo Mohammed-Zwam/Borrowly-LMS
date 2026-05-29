@@ -85,5 +85,6 @@ testem.log
 #####################################################
 # COMMON
 **/application.properties
+**/application.yml
 
 Assets

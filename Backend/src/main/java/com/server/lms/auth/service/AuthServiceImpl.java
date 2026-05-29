@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
-        var user = userService.findEntityByEmail(loginRequest.getEmail());
+        var user = userService.findEntityByEmail(loginRequest.getEmail(), "Email Or Password Not Found");
 
         var lastLogin = LocalDateTime.now();
         userService.updateLastLogin(user.getId(), LocalDateTime.now());
@@ -96,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void createPasswordResetToken(String email) {
-        User user = userService.findEntityByEmail(email);
+        User user = userService.findEntityByEmail(email, "This Email Not Found");
 
 
         String generatedToken = UUID.randomUUID().toString();

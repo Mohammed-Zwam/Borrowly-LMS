@@ -1,5 +1,6 @@
 package com.server.lms.user.dto.request;
 
+import com.server.lms._shared.validators.letters_only.LettersOnly;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -30,10 +31,15 @@ public class UserRequest {
 
     @NotBlank(message = "Name is required")
     @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+    @LettersOnly(message = "Name must contain only letters")
     private String name;
 
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 30, message = "Username must be between 3 and 30 characters")
+    @Pattern(
+            regexp = "^[a-zA-Z0-9_-]+$",
+            message = "Username can only contain letters, numbers, underscores, and hyphens"
+    )
     private String username;
 }
 

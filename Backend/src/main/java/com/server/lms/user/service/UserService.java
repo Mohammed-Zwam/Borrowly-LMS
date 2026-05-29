@@ -22,5 +22,5 @@ public interface UserService extends BaseService<User, String> {
 
     void updateLastLogin(String userId, LocalDateTime lastLogin);
 
-    User findEntityByEmail(String email);
+    User findEntityByEmail(String email, String errorMessage);
 }
