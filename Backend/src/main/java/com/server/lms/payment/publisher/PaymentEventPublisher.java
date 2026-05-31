@@ -1,6 +1,6 @@
-package com.server.lms.payment.event.publisher;
+package com.server.lms.payment.publisher;
 
-import com.server.lms.payment.entity.Payment;
+import com.server.lms.payment.event.MembershipPaymentSucceededEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class PaymentEventPublisher {
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public void publishPaymentSuccessEvent(Payment payment) {
+    public void publishMembershipPaymentSuccessfulEvent(MembershipPaymentSucceededEvent payment) {
         applicationEventPublisher.publishEvent(payment);
     }
 

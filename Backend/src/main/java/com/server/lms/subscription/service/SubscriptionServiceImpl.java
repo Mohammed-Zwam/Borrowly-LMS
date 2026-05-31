@@ -74,6 +74,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public PaymentInitiateResponse subscribe(SubscriptionRequest dto) {
+        // TODO: SUBSCRIPTION VALIDATION (CHECK IF EXIST) || CHECK PLAN DETAILS (ex: Amount, Features, ...)
         var user = userService.getCurrentUser();
 
         Subscription subscription = subscriptionMapper.toEntity(dto);
@@ -81,8 +82,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscription.initFromPlan();
         subscription.setUser(user);
         subscription.setIsActive(false); // UNTIL PAYMENT PROCESS COMPLETED
-
-        // TODO: PAYMENT VALIDATION
 
         subscription = subscriptionRepository.save(subscription);
 
@@ -110,12 +109,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new SubscriptionCancellationException("Subscription is already active");
         }
 
-        if (!Objects.equals(subscription.getUser().getId(), userService.getCurrentUser().getId())) {
-            throw new UnauthorizedException("You are not authorized to activate this subscription");
-        }
+        // TODO: VALIDATE PAYMENT INFO WHEN ACTIVATION REQUESTED BY ADMIN
 
-        // TODO: PAYMENT VALIDATION
-        // TODO: VALIDATE LOGIC (UPDATE PLAN DETAILS OR NO !? <REAL WORLD>
         subscription.setIsActive(true);
         subscriptionRepository.save(subscription);
 

@@ -1,5 +1,6 @@
 package com.server.lms.payment.service;
 
+import com.server.lms.payment.dto.request.PaymentRequest;
 import com.server.lms.payment.dto.response.PaymentLinkResponse;
 import com.server.lms.payment.entity.Payment;
 import com.server.lms.payment.enums.PaymentType;
@@ -7,9 +8,13 @@ import com.server.lms.payment.exception.PaymentFailureException;
 import com.server.lms.subscription.entity.SubscriptionPlan;
 import com.server.lms.subscription.service.SubscriptionPlanService;
 import com.server.lms.user.entity.User;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Event;
+import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.checkout.Session;
+import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +29,12 @@ public class StripePaymentGateway implements PaymentGateway {
 
     private final SubscriptionPlanService subscriptionPlanService;
 
+
     @Value("${client.base-url}")
     private String baseUrl;
+
+    @Value("${stripe.webhook.key}")
+    private String stripeWebhookSecretKey;
 
     @Override
     public PaymentLinkResponse createPaymentLink(User user, Payment payment) {
@@ -83,6 +92,41 @@ public class StripePaymentGateway implements PaymentGateway {
         }
     }
 
+    @Override
+    public PaymentRequest handleWebhookEvent(String payload, String signature) {
+        Event event = null;
+        try {
+            event = Webhook.constructEvent(payload, signature, stripeWebhookSecretKey);
+        } catch (SignatureVerificationException e) {
+            throw new PaymentFailureException("Invalid signature: " + e.getMessage());
+        }
+
+        String type = event.getType();
+        if (type.equals("checkout.session.completed")) {
+            EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
+            Object stripeObject = dataObjectDeserializer.getObject().orElse(null);
+            Session session = (Session) stripeObject;
+
+            assert session != null;
+
+            Map<String, String> metadata = session.getMetadata();
+
+           return PaymentRequest.builder()
+                   .userId(metadata.get("user_id"))
+                   .paymentId(metadata.get("payment_id"))
+                   .amount(session.getAmountTotal())
+                   .userEmail(metadata.get("user_email"))
+                   .userName(metadata.get("user_name"))
+                   .subscriptionId(metadata.get("subscription_id"))
+                   .subscriptionPlanCode(metadata.get("subscription_plan_code"))
+                   .paymentType(metadata.get("payment_type") != null ? PaymentType.valueOf(metadata.get("payment_type")) : null)
+                   .build();
+
+        }
+
+        return null;
+    }
+
 
     @Override
     public Map<String, String> validatePayment(String gatewayPaymentId) {
@@ -90,7 +134,6 @@ public class StripePaymentGateway implements PaymentGateway {
             PaymentIntent paymentIntent = fetchPaymentDetails(gatewayPaymentId);
             Map<String, String> metadata = paymentIntent.getMetadata();
             metadata.put("isValidPayment", "false"); // initially
-
 
             String status = paymentIntent.getStatus();
             if (!status.equalsIgnoreCase("captured")) return metadata;

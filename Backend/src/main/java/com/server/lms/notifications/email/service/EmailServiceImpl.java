@@ -1,5 +1,6 @@
-package com.server.lms._shared.email;
+package com.server.lms.notifications.email.service;
 
+import com.server.lms.notifications.email.enums.EmailTemplate;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

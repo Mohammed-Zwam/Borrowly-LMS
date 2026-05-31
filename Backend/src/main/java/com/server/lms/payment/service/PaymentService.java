@@ -15,5 +15,7 @@ public interface PaymentService extends BaseService<Payment, String> {
 
     PaymentResponse verifyPayment(PaymentRequest request);
 
+    PaymentResponse verifyPayment(String payload, String signature);
+
     PageResponse<PaymentResponse> getAllPayments(PageRequestDTO pageRequest);
 }
