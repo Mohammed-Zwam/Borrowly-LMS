@@ -11,7 +11,7 @@ import {
   ApiResponse
 } from '../models/auth.model';
 
-import { environment } from '../../../environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

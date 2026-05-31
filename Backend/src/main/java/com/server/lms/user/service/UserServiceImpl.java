@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return findEntityByEmail(userEmail);
+        return findEntityByEmail(userEmail, "User Not Found");
     }
 
     @Override
@@ -64,10 +64,10 @@ public class UserServiceImpl implements UserService {
 
 
     //=========== HELPERS ===========//
-    public User findEntityByEmail(String email) {
+    public User findEntityByEmail(String email, String errorMessage) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Email Or Password Not Found"
+                        errorMessage
                 ));
     }
 
