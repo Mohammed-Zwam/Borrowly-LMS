@@ -119,6 +119,7 @@ public class SubscriptionController {
     }
 
     @PostMapping("/{subscriptionId}/activate")
+    @PreAuthorize("hasRole('ADMIN')") // TODO: When admin need to activate subscription for user (SUPPORT)
     public ResponseEntity<ApiResponse<?>> activateSubscription(
             @PathVariable @NotBlank @NotNull String subscriptionId,
             @RequestParam @NotBlank @NotNull String paymentId

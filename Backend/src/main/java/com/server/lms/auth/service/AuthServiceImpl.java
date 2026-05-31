@@ -1,7 +1,7 @@
 package com.server.lms.auth.service;
 
-import com.server.lms._shared.email.EmailService;
-import com.server.lms._shared.email.EmailTemplate;
+import com.server.lms.notifications.email.service.EmailService;
+import com.server.lms.notifications.email.enums.EmailTemplate;
 import com.server.lms.auth.dto.request.LoginRequest;
 import com.server.lms.auth.dto.response.AuthResponse;
 import com.server.lms.security.utils.JwtUtils;

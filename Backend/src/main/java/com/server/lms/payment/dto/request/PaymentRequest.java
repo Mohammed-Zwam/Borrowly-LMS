@@ -3,11 +3,17 @@ package com.server.lms.payment.dto.request;
 import com.server.lms.payment.enums.PaymentProvider;
 import com.server.lms.payment.enums.PaymentStatus;
 import com.server.lms.payment.enums.PaymentType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentRequest {
     private String paymentId;
 
@@ -20,6 +26,8 @@ public class PaymentRequest {
     private String BookLoanId;
 
     private String subscriptionId;
+
+    private String subscriptionPlanCode;
 
     private PaymentType paymentType;
 

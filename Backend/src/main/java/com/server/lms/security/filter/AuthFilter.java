@@ -29,7 +29,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final UserDetailsServiceImpl userDetailsService;
-    private static final Set<String> PUBLIC_PATHS = Set.of("/api/auth");
+    private static final Set<String> PUBLIC_PATHS = Set.of("/api/auth", "/api/payments/verify");
 
     @Override
     protected void doFilterInternal(

@@ -9,7 +9,8 @@ import com.server.lms.payment.dto.response.PaymentLinkResponse;
 import com.server.lms.payment.dto.response.PaymentResponse;
 import com.server.lms.payment.entity.Payment;
 import com.server.lms.payment.enums.PaymentStatus;
-import com.server.lms.payment.event.publisher.PaymentEventPublisher;
+import com.server.lms.payment.event.MembershipPaymentSucceededEvent;
+import com.server.lms.payment.publisher.PaymentEventPublisher;
 import com.server.lms.payment.exception.PaymentFailureException;
 import com.server.lms.payment.mapper.PaymentInitiateMapper;
 import com.server.lms.payment.mapper.PaymentMapper;
@@ -18,6 +19,7 @@ import com.server.lms.subscription.entity.Subscription;
 import com.server.lms.subscription.repository.SubscriptionRepository;
 import com.server.lms.user.entity.User;
 import com.server.lms.user.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
+    @Transactional
     public PaymentInitiateResponse initiatePayment(PaymentInitiateRequest request) {
         User user = userService.getCurrentUser();
 
@@ -58,12 +61,15 @@ public class PaymentServiceImpl implements PaymentService {
 
         PaymentGateway gateway = paymentGatewayFactory(request.getPaymentProvider().name());
 
+
+        payment = paymentRepository.save(payment);
+
         PaymentLinkResponse paymentLinkResponse = gateway.createPaymentLink(user, payment);
         payment.setGatewayPaymentOrderId(paymentLinkResponse.getId());
         payment.setPaymentStatus(PaymentStatus.PROCESSING);
         payment.setInitiatedAt(LocalDateTime.now());
 
-        paymentRepository.save(payment);
+        // paymentRepository.save(payment); update directly by using @Transactional
 
         return PaymentInitiateResponse.builder()
                 .paymentProvider(request.getPaymentProvider())
@@ -78,6 +84,13 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public PaymentResponse verifyPayment(PaymentRequest request) {
+        return null;
+    }
+
+    // TODO: Activate Subscription & EVENTS (NOTIFICATIONS)
+    /*
+        @Override
     public PaymentResponse verifyPayment(PaymentRequest request) {
         PaymentGateway gateway = paymentGatewayFactory(request.getPaymentProvider().name());
 
@@ -94,13 +107,44 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setCompletedAt(LocalDateTime.now());
         payment = paymentRepository.save(payment);
 
-        // TODO: Activate Subscription & EVENTS (NOTIFICATIONS)
-        paymentEventPublisher.publishPaymentSuccessEvent(payment);
-
-
+        paymentEventPublisher.publishMembershipPaymentSuccessfulEvent(
+                MembershipPaymentSucceededEvent.builder()
+                        .paymentId(payment.getId())
+                        .userId(payment.getUser().getId())
+                        .subscriptionId(paymentValidator.get("subscription_id"))
+                        .build()
+        );
 
         return paymentMapper.toDTO(payment);
     }
+    */
+
+
+    public PaymentResponse verifyPayment(String payload, String signature) {
+        PaymentGateway gateway = paymentGatewayFactory("STRIPE");
+        PaymentRequest paymentRequest = gateway.handleWebhookEvent(payload, signature);
+
+
+        Payment payment = findEntityById(paymentRequest.getPaymentId());
+
+        payment.setPaymentStatus(PaymentStatus.SUCCESS);
+        payment.setCompletedAt(LocalDateTime.now());
+        payment = paymentRepository.save(payment);
+
+        paymentEventPublisher.publishMembershipPaymentSuccessfulEvent(
+                MembershipPaymentSucceededEvent.builder()
+                        .paymentId(payment.getId())
+                        .userId(payment.getUser().getId())
+                        .userEmail(paymentRequest.getUserEmail())
+                        .userName(paymentRequest.getUserName())
+                        .subscriptionPlanCode(paymentRequest.getSubscriptionPlanCode())
+                        .subscriptionId(paymentRequest.getSubscriptionId())
+                        .build()
+        );
+
+        return paymentMapper.toDTO(payment);
+    }
+
 
     @Override
     public PageResponse<PaymentResponse> getAllPayments(PageRequestDTO pageRequest) {

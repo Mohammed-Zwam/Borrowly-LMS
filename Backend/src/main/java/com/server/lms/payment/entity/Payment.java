@@ -26,14 +26,14 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Subscription subscription;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Penalty penalty;
 
     @Enumerated(EnumType.STRING)
