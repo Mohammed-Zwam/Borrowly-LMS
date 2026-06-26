@@ -5,8 +5,7 @@ import { RouterModule, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { ForgetPasswordRequest } from '../../models/auth.model';
 import { HeroSection } from '../../components/hero-section/hero-section';
@@ -21,7 +20,6 @@ import { HeroSection } from '../../components/hero-section/hero-section';
     HttpClientModule,
     ButtonModule,
     InputTextModule,
-    ToastModule,
     HeroSection
   ],
   templateUrl: './forgot-password.html',
@@ -35,8 +33,7 @@ export class ForgotPasswordComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router,
-    private messageService: MessageService
+    private router: Router
   ) {
     this.initializeForm();
   }
@@ -44,6 +41,16 @@ export class ForgotPasswordComponent {
   initializeForm(): void {
     this.forgotForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]]
+    });
+  }
+
+  private showAlert(icon: 'success' | 'error', title: string, text: string): void {
+    void Swal.fire({
+      icon,
+      title,
+      text,
+      confirmButtonColor: '#2563eb',
+      confirmButtonText: 'Okay'
     });
   }
 
@@ -64,11 +71,7 @@ export class ForgotPasswordComponent {
 
   onSubmit(): void {
     if (this.forgotForm.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Please enter a valid email address'
-      });
+      this.showAlert('error', 'Error', 'Please enter a valid email address');
       return;
     }
 
@@ -82,19 +85,11 @@ export class ForgotPasswordComponent {
       next: (response) => {
         this.loading = false;
         this.submitted = true;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Password reset link has been sent to your email!'
-        });
+        this.showAlert('success', 'Success', 'Password reset link has been sent to your email!');
       },
       error: (error) => {
         this.loading = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.message || 'Failed to send reset link'
-        });
+        this.showAlert('error', 'Error', error?.message || 'Failed to send reset link');
       }
     });
   }

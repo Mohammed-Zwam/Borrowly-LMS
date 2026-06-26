@@ -2,12 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../models/auth.model';
 import { HeroSection } from '../../components/hero-section/hero-section';
@@ -22,13 +20,12 @@ import { HeroSection } from '../../components/hero-section/hero-section';
     ButtonModule,
     InputTextModule,
     CheckboxModule,
-    ToastModule,
     HeroSection
   ],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   loginForm!: FormGroup;
   loading = false;
   showPassword = false;
@@ -37,15 +34,11 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router,
-    private messageService: MessageService
+    private router: Router
   ) {
     this.initializeForm();
   }
 
-  ngOnInit(): void {
-    this.loadRememberedEmail();
-  }
 
   initializeForm(): void {
     this.loginForm = this.formBuilder.group({
@@ -55,15 +48,15 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  loadRememberedEmail(): void {
-    const rememberedEmail = localStorage.getItem('rememberedEmail');
-    if (rememberedEmail) {
-      this.loginForm.patchValue({
-        email: rememberedEmail,
-        rememberMe: true
-      });
-      this.rememberMe = true;
-    }
+  private showAlert(icon: 'success' | 'error', title: string, text: string): void {
+    void Swal.fire({
+      icon,
+      title,
+      text,
+      confirmButtonColor: '#2563eb',
+      confirmButtonText: 'Okay'
+      
+    });
   }
 
   togglePasswordVisibility(): void {
@@ -93,11 +86,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Please fill all required fields correctly'
-      });
+      this.showAlert('error', 'Error', 'Please fill all required fields correctly');
       return;
     }
 
@@ -108,22 +97,13 @@ export class LoginComponent implements OnInit {
       password: this.loginForm.get('password')?.value
     };
 
-    // Handle remember me
-    if (this.loginForm.get('rememberMe')?.value) {
-      localStorage.setItem('rememberedEmail', loginRequest.email);
-    } else {
-      localStorage.removeItem('rememberedEmail');
-    }
+
 
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
         this.loading = false;
-        console.log(response)
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Login successful!'
-        });
+        console.log(response);
+        this.showAlert('success', 'Success', 'Login successful!');
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 1500);
@@ -131,13 +111,8 @@ export class LoginComponent implements OnInit {
 
       error: (error) => {
         this.loading = false;
-        console.log(error)
-
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.message || 'Invalid credentials'
-        });
+        console.log(error);
+        this.showAlert('error', 'Error', error?.message || 'Invalid credentials');
       }
     });
   }

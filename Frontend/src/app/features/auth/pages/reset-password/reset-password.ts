@@ -5,8 +5,7 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { ResetPasswordRequest } from '../../models/auth.model';
 import { HeroSection } from '../../components/hero-section/hero-section';
@@ -33,7 +32,6 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
     HttpClientModule,
     ButtonModule,
     InputTextModule,
-    ToastModule,
     HeroSection
   ],
   templateUrl: './reset-password.html',
@@ -51,8 +49,7 @@ export class ResetPasswordComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute,
-    private messageService: MessageService
+    private route: ActivatedRoute
   ) {
     this.initializeForm();
   }
@@ -62,11 +59,7 @@ export class ResetPasswordComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.token = params['token'] || '';
       if (!this.token) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Invalid reset link'
-        });
+        this.showAlert('error', 'Error', 'Invalid reset link');
         setTimeout(() => {
           this.router.navigate(['/auth/login']);
         }, 2000);
@@ -86,6 +79,16 @@ export class ResetPasswordComponent implements OnInit {
       },
       { validators: passwordMatchValidator }
     );
+  }
+
+  private showAlert(icon: 'success' | 'error', title: string, text: string): void {
+    void Swal.fire({
+      icon,
+      title,
+      text,
+      confirmButtonColor: '#2563eb',
+      confirmButtonText: 'Okay'
+    });
   }
 
   calculatePasswordStrength(): void {
@@ -150,11 +153,7 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit(): void {
     if (this.resetForm.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Please fill all required fields correctly'
-      });
+      this.showAlert('error', 'Error', 'Please fill all required fields correctly');
       return;
     }
 
@@ -168,22 +167,14 @@ export class ResetPasswordComponent implements OnInit {
     this.authService.resetPassword(resetPasswordRequest).subscribe({
       next: (response) => {
         this.loading = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Password reset successfully! Please log in with your new password.'
-        });
+        this.showAlert('success', 'Success', 'Password reset successfully! Please log in with your new password.');
         setTimeout(() => {
           this.router.navigate(['/auth/login']);
         }, 2000);
       },
       error: (error) => {
         this.loading = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.message || 'Failed to reset password'
-        });
+        this.showAlert('error', 'Error', error?.message || 'Failed to reset password');
       }
     });
   }

@@ -37,7 +37,7 @@
         <div class="mb-3">
           <label class="form-label small text-uppercase text-muted fw-bold">Email</label>
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <span class="input-group-text"><i class="pi pi-envelope"></i></span>
             <input 
               type="email" 
               class="form-control" 
@@ -46,7 +46,7 @@
             />
           </div>
           <div class="invalid-feedback d-block" *ngFor="let error of getEmailErrors()">
-            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
           </div>
         </div>
 
@@ -58,7 +58,7 @@
           </div>
 
           <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <span class="input-group-text"><i class="pi pi-lock"></i></span>
             <input
               [type]="showPassword ? 'text' : 'password'"
               class="form-control"
@@ -70,11 +70,11 @@
               type="button"
               (click)="togglePasswordVisibility()"
             >
-              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+              <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
             </button>
           </div>
           <div class="invalid-feedback d-block" *ngFor="let error of getPasswordErrors()">
-            <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
           </div>
         </div>
 

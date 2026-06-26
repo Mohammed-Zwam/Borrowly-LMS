@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+
 import {
   UserRequest,
   LoginRequest,
@@ -12,15 +13,17 @@ import {
 } from '../models/auth.model';
 
 import { environment } from '../../../../environments/environment';
+import { StorageService } from '../../../core/services/storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class AuthService {
+
   private apiUrl = environment.apiUrl + "/auth";
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private storageService: StorageService) { }
 
   signup(userRequest: UserRequest): Observable<AuthResponse> {
     return this.http
@@ -28,7 +31,7 @@ export class AuthService {
       .pipe(
         map(response => {
           if (response.data.token) {
-            localStorage.setItem('token', response.data.token);
+            this.storageService.set('token', response.data.token);
           }
           return response.data;
         }),
@@ -42,7 +45,7 @@ export class AuthService {
       .pipe(
         map(response => {
           if (response.data.token) {
-            localStorage.setItem('token', response.data.token);
+            this.storageService.set('token', response.data.token);
           }
           return response.data;
         }),
@@ -69,15 +72,17 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    // TODO: API Call
+    this.storageService.remove('token');
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    // TODO: API Call
+    return this.storageService.get('token') !== null;
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return this.storageService.get('token');
   }
 
   private handleError(error: HttpErrorResponse) {
