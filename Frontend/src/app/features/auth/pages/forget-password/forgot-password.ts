@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import Swal from 'sweetalert2';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 import { ForgetPasswordRequest } from '../../models/auth.model';
-import { HeroSection } from '../../components/hero-section/hero-section';
+import { HeroSection } from "../../components/hero-section/hero-section";
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,15 +17,15 @@ import { HeroSection } from '../../components/hero-section/hero-section';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    HttpClientModule,
     ButtonModule,
     InputTextModule,
+    ToastModule,
     HeroSection
-  ],
+],
   templateUrl: './forgot-password.html',
   styleUrl: './forgot-password.css'
 })
-export class ForgotPasswordComponent {
+export class ForgotPassword {
   forgotForm!: FormGroup;
   loading = false;
   submitted = false;
@@ -33,7 +33,7 @@ export class ForgotPasswordComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private messageService: MessageService
   ) {
     this.initializeForm();
   }
@@ -41,16 +41,6 @@ export class ForgotPasswordComponent {
   initializeForm(): void {
     this.forgotForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]]
-    });
-  }
-
-  private showAlert(icon: 'success' | 'error', title: string, text: string): void {
-    void Swal.fire({
-      icon,
-      title,
-      text,
-      confirmButtonColor: '#2563eb',
-      confirmButtonText: 'Okay'
     });
   }
 
@@ -69,30 +59,6 @@ export class ForgotPasswordComponent {
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
-  onSubmit(): void {
-    if (this.forgotForm.invalid) {
-      this.showAlert('error', 'Error', 'Please enter a valid email address');
-      return;
-    }
-
-    this.loading = true;
-
-    const forgetPasswordRequest: ForgetPasswordRequest = {
-      email: this.forgotForm.get('email')?.value
-    };
-
-    this.authService.forgetPassword(forgetPasswordRequest).subscribe({
-      next: (response) => {
-        this.loading = false;
-        this.submitted = true;
-        this.showAlert('success', 'Success', 'Password reset link has been sent to your email!');
-      },
-      error: (error) => {
-        this.loading = false;
-        this.showAlert('error', 'Error', error?.message || 'Failed to send reset link');
-      }
-    });
-  }
 
 
   getFieldError(fieldName: string): string {
@@ -106,5 +72,46 @@ export class ForgotPasswordComponent {
 
     return 'Invalid field';
   }
+
+
+  onSubmit(): void {
+    if (this.forgotForm.invalid) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please enter a valid email address'
+      });
+      this.forgotForm.markAllAsDirty();
+      this.forgotForm.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+
+    const forgetPasswordRequest: ForgetPasswordRequest = {
+      email: this.forgotForm.get('email')?.value
+    };
+
+    this.authService.forgetPassword(forgetPasswordRequest).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.submitted = true;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Password reset link has been sent to your email!'
+        });
+      },
+      error: (error) => {
+        this.loading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.message || 'Failed to send reset link'
+        });
+      }
+    });
+  }
+
 }
 

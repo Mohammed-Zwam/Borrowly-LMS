@@ -36,75 +36,83 @@
         <div class="mb-3">
           <label class="form-label small text-uppercase text-muted fw-bold">Full Name</label>
           <div class="input-group">
-            <span class="input-group-text"><i class="pi pi-id-card"></i></span>
-            <input 
-              type="name" 
-              class="form-control" 
+            <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+            <input
+              type="name"
+              class="form-control"
               [class.is-invalid]="isFieldInvalid('name')"
-              formControlName="name" 
+              formControlName="name"
             />
           </div>
-          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('name')">
-            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
-          </div>
+          @for (error of getFieldErrors('name'); track $index) {
+            <div class="invalid-feedback d-block">
+              <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            </div>
+          }
         </div>
 
         <!-- Email -->
         <div class="mb-3">
           <label class="form-label small text-uppercase text-muted fw-bold">Email</label>
           <div class="input-group">
-            <span class="input-group-text"><i class="pi pi-envelope"></i></span>
-            <input 
-              type="email" 
-              class="form-control" 
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input
+              type="email"
+              class="form-control"
               [class.is-invalid]="isFieldInvalid('email')"
-              formControlName="email" 
+              formControlName="email"
             />
           </div>
-          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('email')">
-            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
-          </div>
+          @for (error of getFieldErrors('email'); track $index) {
+            <div class="invalid-feedback d-block">
+              <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            </div>
+          }
         </div>
 
         <!-- Username -->
         <div class="mb-3">
           <label class="form-label small text-uppercase text-muted fw-bold">Username</label>
           <div class="input-group">
-            <span class="input-group-text"><i class="pi pi-user"></i></span>
-            <input 
-              type="username" 
-              class="form-control" 
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input
+              type="username"
+              class="form-control"
               [class.is-invalid]="isFieldInvalid('username')"
-              formControlName="username" 
+              formControlName="username"
             />
           </div>
-          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('username')">
-            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
-          </div>
+          @for (error of getFieldErrors('username'); track $index) {
+            <div class="invalid-feedback d-block">
+              <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            </div>
+          }
         </div>
 
         <!-- Phone -->
         <div class="mb-3">
           <label class="form-label small text-uppercase text-muted fw-bold">Phone</label>
           <div class="input-group">
-            <span class="input-group-text"><i class="pi pi-phone"></i></span>
-            <input 
-              type="phone" 
-              class="form-control" 
+            <span class="input-group-text"><i class="bi bi-phone"></i></span>
+            <input
+              type="phone"
+              class="form-control"
               [class.is-invalid]="isFieldInvalid('phone')"
-              formControlName="phone" 
+              formControlName="phone"
             />
           </div>
-          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('phone')">
-            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
-          </div>
+          @for (error of getFieldErrors('phone'); track $index) {
+            <div class="invalid-feedback d-block">
+              <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            </div>
+          }
         </div>
 
         <!-- Password -->
         <div class="mb-3">
           <label class="form-label small text-uppercase text-muted fw-bold">Password</label>
           <div class="input-group">
-            <span class="input-group-text"><i class="pi pi-lock"></i></span>
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
             <input
               class="form-control"
               [class.is-invalid]="isFieldInvalid('password')"
@@ -116,34 +124,42 @@
               type="button"
               (click)="togglePasswordVisibility()"
             >
-              <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
             </button>
           </div>
-          <div class="invalid-feedback d-block" *ngFor="let error of getFieldErrors('password')">
-            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
-          </div>
+          @for (error of getFieldErrors('password'); track $index) {
+            <div class="invalid-feedback d-block">
+              <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            </div>
+          }
 
           <!-- Strength -->
-          <div class="mt-2" *ngIf="signupForm.get('password')?.value">
-            <small class="text-muted">Strength:</small>
-            <div class="progress" style="height: 6px">
-              <div
-                class="progress-bar"
-                [style.width.%]="passwordStrength * 20"
-                [style.backgroundColor]="getPasswordStrengthColor()"
-              ></div>
+          @if (signupForm.get('password')?.value) {
+            <div class="mt-2">
+              <small class="text-muted">Strength:</small>
+              <div class="progress" style="height: 6px">
+                <div
+                  class="progress-bar"
+                  [style.width.%]="passwordStrength * 20"
+                  [style.backgroundColor]="getPasswordStrengthColor()"
+                ></div>
+              </div>
             </div>
-          </div>
+          }
         </div>
 
         <!-- Confirm -->
         <div class="mb-3">
           <label class="form-label small text-uppercase text-muted fw-bold">Confirm Password</label>
           <div class="input-group">
-            <span class="input-group-text"><i class="pi pi-shield"></i></span>
+            <span class="input-group-text"><i class="bi bi-shield-check"></i></span>
             <input
               class="form-control"
-              [class.is-invalid]="isFieldInvalid('confirmPassword') || (signupForm.errors?.['passwordMismatch'] && signupForm.get('confirmPassword')?.touched)"
+              [class.is-invalid]="
+                isFieldInvalid('confirmPassword') ||
+                (signupForm.errors?.['passwordMismatch'] &&
+                  signupForm.get('confirmPassword')?.touched)
+              "
               [type]="showConfirmPassword ? 'text' : 'password'"
               formControlName="confirmPassword"
             />
@@ -152,44 +168,50 @@
               type="button"
               (click)="toggleConfirmPasswordVisibility()"
             >
-              <i [class]="showConfirmPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+              <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
             </button>
           </div>
-          <div class="invalid-feedback d-block" *ngFor="let error of getConfirmPasswordErrors()">
-            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
-          </div>
+          @for (error of getConfirmPasswordErrors(); track $index) {
+            <div class="invalid-feedback d-block">
+              <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            </div>
+          }
         </div>
 
         <!-- Terms -->
         <div class="mb-3">
           <div class="form-check">
-            <input 
-              class="form-check-input" 
+            <input
+              class="form-check-input"
               [class.is-invalid]="isFieldInvalid('agreeToTerms')"
-              type="checkbox" 
-              formControlName="agreeToTerms" 
+              type="checkbox"
+              formControlName="agreeToTerms"
               id="agreeTerms"
             />
             <label class="form-check-label" for="agreeTerms">
               I agree to Terms & Privacy Policy
             </label>
           </div>
-          <div class="invalid-feedback d-block" *ngFor="let error of getTermsErrors()">
-            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
-          </div>
+          @for (error of getTermsErrors(); track $index) {
+            <div class="invalid-feedback d-block">
+              <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            </div>
+          }
         </div>
 
         <!-- Submit -->
         <button class="btn btn-primary w-100" [disabled]="loading">
           Create Account
-          <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm"></span>
+          }
         </button>
       </form>
 
       <div class="text-center mt-4 pt-4 border-top">
         <p class="text-muted">
           Already have an account?
-          <a routerLink="/auth/login" class="fw-bold text-primary">Login</a>
+          <a routerLink="/login" class="fw-bold text-primary">Login</a>
         </p>
       </div>
     </div>

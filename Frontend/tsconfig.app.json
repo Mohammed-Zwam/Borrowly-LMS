@@ -3,8 +3,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist/out-tsc",
-    "rootDir": "src",
     "types": [
       "node"
     ]
@@ -16,4 +14,3 @@
     "src/**/*.spec.ts"
   ]
 }
-

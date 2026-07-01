@@ -36,9 +36,4 @@ export interface AuthResponse {
   user: UserResponse;
 }
 
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
 

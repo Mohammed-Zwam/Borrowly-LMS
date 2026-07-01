@@ -1,4 +1,3 @@
-
 <div class="d-flex min-vh-100">
   <app-hero-section
     class="col-lg-6"
@@ -37,28 +36,30 @@
         <div class="mb-3">
           <label class="form-label small text-uppercase text-muted fw-bold">Email</label>
           <div class="input-group">
-            <span class="input-group-text"><i class="pi pi-envelope"></i></span>
-            <input 
-              type="email" 
-              class="form-control" 
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input
+              type="email"
+              class="form-control"
               [class.is-invalid]="isFieldInvalid('email')"
-              formControlName="email" 
+              formControlName="email"
             />
           </div>
-          <div class="invalid-feedback d-block" *ngFor="let error of getEmailErrors()">
-            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
-          </div>
+          @for (error of getEmailErrors(); track $index) {
+            <div class="invalid-feedback d-block">
+              <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            </div>
+          }
         </div>
 
         <!-- Password -->
         <div class="mb-3">
           <div class="d-flex justify-content-between">
             <label class="form-label small text-uppercase text-muted fw-bold">Password</label>
-            <a routerLink="/auth/forgot-password" class="small text-primary">Forgot?</a>
+            <a routerLink="/forgot-password" class="small text-primary pw-bold">Forgot?</a>
           </div>
 
           <div class="input-group">
-            <span class="input-group-text"><i class="pi pi-lock"></i></span>
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
             <input
               [type]="showPassword ? 'text' : 'password'"
               class="form-control"
@@ -70,12 +71,14 @@
               type="button"
               (click)="togglePasswordVisibility()"
             >
-              <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
             </button>
           </div>
-          <div class="invalid-feedback d-block" *ngFor="let error of getPasswordErrors()">
-            <small><i class="pi pi-exclamation-circle me-1"></i>{{ error }}</small>
-          </div>
+          @for (error of getPasswordErrors(); track $index) {
+            <div class="invalid-feedback d-block">
+              <small><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</small>
+            </div>
+          }
         </div>
 
         <!-- Remember -->
@@ -95,14 +98,16 @@
           [disabled]="loading"
         >
           Sign In
-          <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm"></span>
+          }
         </button>
       </form>
 
       <div class="text-center mt-4 pt-4 border-top">
         <p class="text-muted">
           Don't have an account?
-          <a routerLink="/auth/signup" class="fw-bold text-primary">Sign Up</a>
+          <a routerLink="/signup" class="fw-bold text-primary">Sign Up</a>
         </p>
       </div>
     </div>

@@ -5,10 +5,12 @@ import { RouterModule, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
-import Swal from 'sweetalert2';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../models/auth.model';
 import { HeroSection } from '../../components/hero-section/hero-section';
+
 
 @Component({
   selector: 'app-login',
@@ -20,12 +22,13 @@ import { HeroSection } from '../../components/hero-section/hero-section';
     ButtonModule,
     InputTextModule,
     CheckboxModule,
+    ToastModule,
     HeroSection
   ],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class LoginComponent {
+export class Login {
   loginForm!: FormGroup;
   loading = false;
   showPassword = false;
@@ -34,30 +37,19 @@ export class LoginComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {
-    this.initializeForm();
-  }
-
-
-  initializeForm(): void {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       rememberMe: [false]
     });
+
   }
 
-  private showAlert(icon: 'success' | 'error', title: string, text: string): void {
-    void Swal.fire({
-      icon,
-      title,
-      text,
-      confirmButtonColor: '#2563eb',
-      confirmButtonText: 'Okay'
-      
-    });
-  }
+
+
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -86,7 +78,13 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      this.showAlert('error', 'Error', 'Please fill all required fields correctly');
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill all required fields correctly'
+      });
+      this.loginForm.markAllAsDirty();
+      this.loginForm.markAllAsTouched();
       return;
     }
 
@@ -97,22 +95,34 @@ export class LoginComponent {
       password: this.loginForm.get('password')?.value
     };
 
-
+    // Handle remember me
+    if (this.loginForm.get('rememberMe')?.value) {
+      localStorage.setItem('rememberedEmail', loginRequest.email);
+    } else {
+      localStorage.removeItem('rememberedEmail');
+    }
 
     this.authService.login(loginRequest).subscribe({
       next: (response) => {
         this.loading = false;
-        console.log(response);
-        this.showAlert('success', 'Success', 'Login successful!');
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 1500);
+        console.log(response)
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Login successful!'
+        });
+        this.router.navigate(['/dashboard']); // TODO: Redirect to dashboard after login Based on user role
       },
 
       error: (error) => {
         this.loading = false;
-        console.log(error);
-        this.showAlert('error', 'Error', error?.message || 'Invalid credentials');
+        console.log(error)
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.message || 'Invalid credentials'
+        });
       }
     });
   }

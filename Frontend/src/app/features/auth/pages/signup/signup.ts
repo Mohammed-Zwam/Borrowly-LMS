@@ -7,7 +7,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
-import Swal from 'sweetalert2';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 import { UserRequest } from '../../models/auth.model';
 import { HeroSection } from '../../components/hero-section/hero-section';
@@ -35,12 +36,13 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
     InputTextModule,
     PasswordModule,
     CheckboxModule,
+    ToastModule,
     HeroSection
   ],
   templateUrl: './signup.html',
   styleUrls: ['./signup.css']
 })
-export class SignupComponent implements OnInit {
+export class Signup implements OnInit {
   signupForm!: FormGroup;
   loading = false;
   showPassword = false;
@@ -50,7 +52,8 @@ export class SignupComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {
     this.initializeForm();
   }
@@ -74,16 +77,6 @@ export class SignupComponent implements OnInit {
       },
       { validators: passwordMatchValidator }
     );
-  }
-
-  private showAlert(icon: 'success' | 'error', title: string, text: string): void {
-    void Swal.fire({
-      icon,
-      title,
-      text,
-      confirmButtonColor: '#2563eb',
-      confirmButtonText: 'Okay'
-    });
   }
 
   calculatePasswordStrength(): void {
@@ -165,36 +158,7 @@ export class SignupComponent implements OnInit {
   }
 
 
-  onSubmit(): void {
-    if (this.signupForm.invalid) {
-      this.showAlert('error', 'Error', 'Please fill all required fields correctly');
-      return;
-    }
 
-    this.loading = true;
-
-    const userRequest: UserRequest = {
-      name: this.signupForm.get('name')?.value,
-      email: this.signupForm.get('email')?.value,
-      username: this.signupForm.get('username')?.value,
-      phone: this.signupForm.get('phone')?.value,
-      password: this.signupForm.get('password')?.value
-    };
-
-    this.authService.signup(userRequest).subscribe({
-      next: (response) => {
-        this.loading = false;
-        this.showAlert('success', 'Success', 'Account created successfully!');
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 1500);
-      },
-      error: (error) => {
-        this.loading = false;
-        this.showAlert('error', 'Error', error?.message || 'Failed to create account');
-      }
-    });
-  }
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.signupForm.get(fieldName);
@@ -221,6 +185,51 @@ export class SignupComponent implements OnInit {
       return 'Passwords do not match';
     }
     return '';
+  }
+
+
+
+  onSubmit(): void {
+    if (this.signupForm.invalid) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill all required fields correctly'
+      });
+      this.signupForm.markAllAsDirty();
+      this.signupForm.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+
+    const userRequest: UserRequest = {
+      name: this.signupForm.get('name')?.value,
+      email: this.signupForm.get('email')?.value,
+      username: this.signupForm.get('username')?.value,
+      phone: this.signupForm.get('phone')?.value,
+      password: this.signupForm.get('password')?.value
+    };
+
+    this.authService.signup(userRequest).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Account created successfully!'
+        });
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        this.loading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.message || 'Failed to create account'
+        });
+      }
+    });
   }
 }
 
