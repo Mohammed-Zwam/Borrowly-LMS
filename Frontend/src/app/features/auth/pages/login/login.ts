@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -11,6 +10,7 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../models/auth.model';
 import { HeroSection } from '../../components/hero-section/hero-section';
+
 
 @Component({
   selector: 'app-login',
@@ -28,7 +28,7 @@ import { HeroSection } from '../../components/hero-section/hero-section';
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class LoginComponent implements OnInit {
+export class Login {
   loginForm!: FormGroup;
   loading = false;
   showPassword = false;
@@ -40,31 +40,16 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private messageService: MessageService
   ) {
-    this.initializeForm();
-  }
-
-  ngOnInit(): void {
-    this.loadRememberedEmail();
-  }
-
-  initializeForm(): void {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       rememberMe: [false]
     });
+
   }
 
-  loadRememberedEmail(): void {
-    const rememberedEmail = localStorage.getItem('rememberedEmail');
-    if (rememberedEmail) {
-      this.loginForm.patchValue({
-        email: rememberedEmail,
-        rememberMe: true
-      });
-      this.rememberMe = true;
-    }
-  }
+
+
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -98,6 +83,8 @@ export class LoginComponent implements OnInit {
         summary: 'Error',
         detail: 'Please fill all required fields correctly'
       });
+      this.loginForm.markAllAsDirty();
+      this.loginForm.markAllAsTouched();
       return;
     }
 
@@ -124,9 +111,7 @@ export class LoginComponent implements OnInit {
           summary: 'Success',
           detail: 'Login successful!'
         });
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 1500);
+        this.router.navigate(['/dashboard']); // TODO: Redirect to dashboard after login Based on user role
       },
 
       error: (error) => {

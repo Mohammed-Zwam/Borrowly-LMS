@@ -1,0 +1,90 @@
+<div class="container-fluid bg-primary bg-gradient">
+  <div class="row flex-nowrap min-vh-100">
+    <!-- Sidebar -->
+    <div class="sidebar col-auto col-md-3 col-xl-2 bg-dark text-white d-flex flex-column p-3">
+      <!-- Logo -->
+      <div class="d-flex gap-3 align-items-center mb-4 w-fit mx-auto py-2">
+        <app-logo></app-logo>
+        <h2
+          class="fs-5 m-0 text-center text-uppercase fw-bold gap-1 d-none d-md-inline w-auto flex-auto"
+          style="font-family: monospace; color: white"
+        >
+          Admin Panel
+        </h2>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="nav nav-pills flex-column gap-2 pt-3">
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="sidebar-active-link"
+          class="nav-link fw-bold d-flex align-items-center justify-content-center justify-content-md-start"
+        >
+          <i class="pi pi-home fs-5"></i>
+          <span class="ms-2 d-none d-md-inline">Dashboard</span>
+        </a>
+
+        <a
+          routerLink="/books"
+          routerLinkActive="sidebar-active-link"
+          class="nav-link fw-bold d-flex align-items-center justify-content-center justify-content-md-start"
+        >
+          <i class="pi pi-book fs-5"></i>
+          <span class="ms-2 d-none d-md-inline">Books</span>
+        </a>
+
+        <a
+          routerLink="/user/borrowed"
+          routerLinkActive="sidebar-active-link"
+          class="nav-link fw-bold d-flex align-items-center justify-content-center justify-content-md-start"
+        >
+          <i class="pi pi-inbox fs-5"></i>
+          <span class="ms-2 d-none d-md-inline">Borrowed Books</span>
+        </a>
+
+        <a
+          routerLink="/user/favorites"
+          routerLinkActive="sidebar-active-link"
+          class="nav-link fw-bold d-flex align-items-center justify-content-center justify-content-md-start"
+        >
+          <i class="pi pi-heart fs-5"></i>
+          <span class="ms-2 d-none d-md-inline">Favorites</span>
+        </a>
+
+        <a
+          routerLink="/user/profile"
+          routerLinkActive="sidebar-active-link"
+          class="nav-link fw-bold d-flex align-items-center justify-content-center justify-content-md-start"
+        >
+          <i class="pi pi-user fs-5"></i>
+          <span class="ms-2 d-none d-md-inline">Profile</span>
+        </a>
+
+        <a
+          routerLink="/user/settings"
+          routerLinkActive="sidebar-active-link"
+          class="nav-link fw-bold d-flex align-items-center justify-content-center justify-content-md-start"
+        >
+          <i class="pi pi-cog fs-5"></i>
+          <span class="ms-2 d-none d-md-inline">Settings</span>
+        </a>
+      </nav>
+
+      <!-- Logout -->
+      <div class="mt-auto">
+        <button
+          class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center justify-content-md-start"
+        >
+          <i class="pi pi-sign-out"></i>
+          <span class="ms-2 d-none d-md-inline">Logout</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="col p-4">
+      <ng-content></ng-content>
+      content
+    </main>
+  </div>
+</div>

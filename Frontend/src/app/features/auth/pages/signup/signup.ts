@@ -42,7 +42,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
   templateUrl: './signup.html',
   styleUrls: ['./signup.css']
 })
-export class SignupComponent implements OnInit {
+export class Signup implements OnInit {
   signupForm!: FormGroup;
   loading = false;
   showPassword = false;
@@ -158,48 +158,7 @@ export class SignupComponent implements OnInit {
   }
 
 
-  onSubmit(): void {
-    if (this.signupForm.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Please fill all required fields correctly'
-      });
-      return;
-    }
 
-    this.loading = true;
-
-    const userRequest: UserRequest = {
-      name: this.signupForm.get('name')?.value,
-      email: this.signupForm.get('email')?.value,
-      username: this.signupForm.get('username')?.value,
-      phone: this.signupForm.get('phone')?.value,
-      password: this.signupForm.get('password')?.value
-    };
-
-    this.authService.signup(userRequest).subscribe({
-      next: (response) => {
-        this.loading = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Account created successfully!'
-        });
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 1500);
-      },
-      error: (error) => {
-        this.loading = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.message || 'Failed to create account'
-        });
-      }
-    });
-  }
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.signupForm.get(fieldName);
@@ -226,6 +185,51 @@ export class SignupComponent implements OnInit {
       return 'Passwords do not match';
     }
     return '';
+  }
+
+
+
+  onSubmit(): void {
+    if (this.signupForm.invalid) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill all required fields correctly'
+      });
+      this.signupForm.markAllAsDirty();
+      this.signupForm.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+
+    const userRequest: UserRequest = {
+      name: this.signupForm.get('name')?.value,
+      email: this.signupForm.get('email')?.value,
+      username: this.signupForm.get('username')?.value,
+      phone: this.signupForm.get('phone')?.value,
+      password: this.signupForm.get('password')?.value
+    };
+
+    this.authService.signup(userRequest).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Account created successfully!'
+        });
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        this.loading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.message || 'Failed to create account'
+        });
+      }
+    });
   }
 }
 

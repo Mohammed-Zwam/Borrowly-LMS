@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 import { ForgetPasswordRequest } from '../../models/auth.model';
-import { HeroSection } from '../../components/hero-section/hero-section';
+import { HeroSection } from "../../components/hero-section/hero-section";
 
 @Component({
   selector: 'app-forgot-password',
@@ -18,16 +17,15 @@ import { HeroSection } from '../../components/hero-section/hero-section';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    HttpClientModule,
     ButtonModule,
     InputTextModule,
     ToastModule,
     HeroSection
-  ],
+],
   templateUrl: './forgot-password.html',
   styleUrl: './forgot-password.css'
 })
-export class ForgotPasswordComponent {
+export class ForgotPassword {
   forgotForm!: FormGroup;
   loading = false;
   submitted = false;
@@ -35,7 +33,6 @@ export class ForgotPasswordComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router,
     private messageService: MessageService
   ) {
     this.initializeForm();
@@ -62,6 +59,21 @@ export class ForgotPasswordComponent {
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
+
+
+  getFieldError(fieldName: string): string {
+    const field = this.forgotForm.get(fieldName);
+    if (!field || !field.errors || !field.touched) {
+      return '';
+    }
+
+    if (field.errors['required']) return `${fieldName} is required`;
+    if (field.errors['email']) return 'Please enter a valid email';
+
+    return 'Invalid field';
+  }
+
+
   onSubmit(): void {
     if (this.forgotForm.invalid) {
       this.messageService.add({
@@ -69,6 +81,8 @@ export class ForgotPasswordComponent {
         summary: 'Error',
         detail: 'Please enter a valid email address'
       });
+      this.forgotForm.markAllAsDirty();
+      this.forgotForm.markAllAsTouched();
       return;
     }
 
@@ -99,17 +113,5 @@ export class ForgotPasswordComponent {
     });
   }
 
-
-  getFieldError(fieldName: string): string {
-    const field = this.forgotForm.get(fieldName);
-    if (!field || !field.errors || !field.touched) {
-      return '';
-    }
-
-    if (field.errors['required']) return `${fieldName} is required`;
-    if (field.errors['email']) return 'Please enter a valid email';
-
-    return 'Invalid field';
-  }
 }
 

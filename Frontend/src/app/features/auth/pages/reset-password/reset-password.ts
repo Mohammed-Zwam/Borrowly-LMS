@@ -39,7 +39,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
   templateUrl: './reset-password.html',
   styleUrl: './reset-password.css'
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPassword implements OnInit {
   resetForm!: FormGroup;
   loading = false;
   showPassword = false;
